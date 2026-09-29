@@ -144,5 +144,14 @@ cargo clippy --locked --all-targets --all-features -- -D warnings
 cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
 ```
 
+The initial scaffold has no executable Rust items, so `cargo llvm-cov` may report
+that no coverage data was found. CI treats that expected bootstrap condition as an
+empty LCOV report; once a solution module exists, the command must produce normal
+coverage data. For an end-to-end hosted test, first add an authorized challenge,
+configure `GEMINI_API_KEY`, then dispatch **Generate LeetCode solution candidate**
+with `challenge_path=challenges/<id>.json`. The workflow records Jev's assessment,
+validates the Gemini candidate, and creates a pull request only after validation
+passes.
+
 `lcov.info` is a local generated artifact and must not be committed. SonarQube
 Cloud consumes the same path in CI.
