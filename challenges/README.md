@@ -10,6 +10,7 @@ Each accepted file must contain:
 {
   "id": "stable-kebab-case-id",
   "title": "Problem title",
+  "leetcode_difficulty": "medium",
   "challenge_date": "2026-09-29",
   "source_type": "maintainer",
   "source_url": "https://example.invalid/authorized-source",
@@ -23,6 +24,14 @@ Each accepted file must contain:
   ]
 }
 ```
+
+`leetcode_difficulty` is the human-facing LeetCode label (`easy`, `medium`, or
+`hard`). Before Gemini generates code, the workflow sends the authorized input
+to TypeSafe's Jev model and stores a separate structured assessment in
+`state/assessments/<id>.json`. Jev uses a five-level ordered Score rubric and
+returns a score, level probabilities, confidence, the responding model version,
+token usage, and elapsed time. The assessment is a model perspective for
+comparison; it is not a correctness check and does not replace review.
 
 `description`, constraints, and examples must be content that the repository is
 allowed to send to Gemini and, if committed, allowed to publish. Set

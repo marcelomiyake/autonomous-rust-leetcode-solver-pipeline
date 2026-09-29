@@ -5,11 +5,13 @@ LeetCode challenge metadata, asks Gemini for a Rust solution candidate, validate
 it locally, opens a pull request, and records progress only after that pull request
 is merged. It never crawls or scrapes LeetCode.
 
-**Status:** The automation, authorized-input format, progress store, bounded repair
-loop, coverage generation, and SonarQube Cloud integration are implemented. No
-challenge has been added to `challenges/` and no generated solution has been
-published yet; the first run therefore exits successfully with “no eligible
-challenge” until a maintainer adds an authorized input file.
+**Status:** The automation, authorized-input format, Jev difficulty assessment,
+progress store, bounded repair loop, coverage generation, and SonarQube Cloud
+integration are implemented. No challenge has been added to `challenges/` and no
+generated solution has been published yet; the first run therefore exits
+successfully with “no eligible challenge” until a maintainer adds an authorized
+input file. The external TypeSafe key still must be present as the documented
+GitHub Actions secret before an eligible challenge is run.
 
 ## Problem eligibility
 
@@ -29,6 +31,7 @@ Before a problem is processed, verify that Rust is one of its supported LeetCode
 ├── scripts/
 │   └── solver_pipeline.py # Standard-library pipeline implementation
 ├── state/
+│   ├── assessments/     # Published Jev AI difficulty analyses
 │   └── progress.json    # Updated only after an automated solution is merged
 ├── src/
 │   ├── common/mod.rs   # Shared types when needed
@@ -56,16 +59,19 @@ python3 -m unittest discover -s tests -v
 
 1. **Accept an authorized challenge.** Add `challenges/<id>.json` using the schema in [`challenges/README.md`](challenges/README.md). The file must include the stable id, date, authorized description, constraints, Rust signature, examples, source URL, and a maintainer attestation that LeetCode supports Rust. Unsupported or incomplete inputs are rejected before any Gemini request.
 2. **Select the next challenge.** The scheduled workflow ignores completed ids, existing solution modules, invalid files, and open `ai/solution-<id>` pull requests. `workflow_dispatch` can select one specific challenge path for development.
-3. **Generate a candidate.** The workflow calls the Gemini Developer API with the free-tier `gemini-2.5-flash` model, structured JSON output, `temperature=0.2`, `effort=medium` (`thinkingBudget=4096`), and a 12,000-token output ceiling. The response is parsed and checked for a module body, the required function, tests, and disallowed constructs before it is written.
-4. **Verify locally.** The candidate is checked with `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy --all-targets --all-features -- -D warnings`. Compiler diagnostics are passed to Gemini for at most two repairs after the initial request. A failed final check never creates a branch or pull request.
-5. **Measure and analyze.** `build.yml` installs `cargo-llvm-cov`, writes `lcov.info`, and runs the SonarQube Cloud scanner with `sonar.rust.lcov.reportPaths=lcov.info` and `sonar.qualitygate.wait=true`. The Sonar project is `marcelomiyake_autonomous-rust-leetcode-solver-pipeline` in organization `marcelomiyake`. The repository does not claim that a default Quality Gate means 80% coverage; add an explicit gate condition if that becomes a project requirement.
-6. **Publish only after validation.** The solver pushes `ai/solution-<id>` and opens a pull request. A separate closed-pull-request workflow updates `state/progress.json` only when that branch is merged into `main`, so failed runs and rejected pull requests remain retryable.
+3. **Assess difficulty with Jev.** The workflow sends the authorized challenge metadata to TypeSafe's `POST https://api.typesafe.ai/v1/systemone` endpoint using the `jev-latest` model and one typed `Score` question. Its five ordered levels range from very easy to very hard. The workflow stores Jev's actual model version, score, probabilities, confidence, token usage, and elapsed time in `state/assessments/<id>.json`; this is a model perspective, not a correctness gate.
+4. **Generate a candidate.** The workflow calls the Gemini Developer API with the free-tier `gemini-2.5-flash` model, structured JSON output, `temperature=0.2`, `effort=medium` (`thinkingBudget=4096`), and a 12,000-token output ceiling. The response is parsed and checked for a module body, the required function, tests, and disallowed constructs before it is written.
+5. **Verify locally.** The candidate is checked with `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy --all-targets --all-features -- -D warnings`. Compiler diagnostics are passed to Gemini for at most two repairs after the initial request. A failed final check never creates a branch or pull request.
+6. **Measure and publish.** `build.yml` installs `cargo-llvm-cov`, writes `lcov.info`, and runs the SonarQube Cloud scanner with `sonar.rust.lcov.reportPaths=lcov.info` and `sonar.qualitygate.wait=true`. A validated branch contains the solution, its Jev assessment, and the pull request metadata. The Sonar project is `marcelomiyake_autonomous-rust-leetcode-solver-pipeline` in organization `marcelomiyake`. The repository does not claim that a default Quality Gate means 80% coverage; add an explicit gate condition if that becomes a project requirement.
+7. **Record only after merge.** A separate closed-pull-request workflow updates `state/progress.json` only when that branch is merged into `main`, so failed runs and rejected pull requests remain retryable.
 
 Every generated Rust module begins with a small metadata comment containing the
-problem id, model, effort/thinking budget, temperature, aggregate input/output/
-thinking/total token counts, number of model attempts, and solver wall time. The
-wall time starts at the first model request and ends when the final candidate is
-prepared; it includes bounded repair calls and validation time.
+problem id, LeetCode difficulty, Gemini model, effort/thinking budget,
+temperature, aggregate input/output/thinking/total token counts, number of model
+attempts, and solver wall time. When available, it also points to the stored Jev
+assessment and includes its model, score, dominant level, and confidence. The
+Gemini wall time starts at the first model request and ends when the final
+candidate is prepared; it includes bounded repair calls and validation time.
 
 SonarQube Cloud [imports coverage reports produced by other tools](https://docs.sonarsource.com/sonarqube-cloud/analyzing-source-code/test-coverage/overview), and its scanner can [wait for the Quality Gate](https://docs.sonarsource.com/sonarqube-cloud/analyzing-source-code/analysis-parameters/parameters-not-settable-in-ui) with `sonar.qualitygate.wait=true`. The LCOV output path is chosen by the `cargo-llvm-cov` command; it is not implicitly `target/llvm-cov/lcov.info`. See the [cargo-llvm-cov usage examples](https://github.com/taiki-e/cargo-llvm-cov).
 
@@ -74,8 +80,9 @@ SonarQube Cloud [imports coverage reports produced by other tools](https://docs.
 | Service | Configuration |
 | --- | --- |
 | Challenge source | Maintainer-supplied or authorized integration input only; there is no LeetCode crawler. |
-| Google AI Studio | A dedicated project and a Gemini API auth key restricted to the Gemini API. The key is used through the `x-goog-api-key` request header and is never stored in the repository. |
-| GitHub Actions | `GEMINI_API_KEY` is a repository Actions secret. `SONAR_TOKEN` is a repository Actions secret for SonarQube Cloud. `GITHUB_TOKEN` is the short-lived workflow token. The solver workflow has `contents: write` and `pull-requests: write`; the build workflow reads contents; the progress workflow has `contents: write`. |
+| Google AI Studio | A dedicated project and a Gemini API auth key restricted to the Gemini API. The key is used through the `x-goog-api-key` request header and is never stored in the repository. The exact project/key status is recorded below after the external setup is completed. |
+| TypeSafe AI | Jev is called through `POST https://api.typesafe.ai/v1/systemone` with `model=jev-latest`, a single Score question, and `Authorization: Bearer`. The response model version is stored per assessment. The TypeSafe key is never written to the repository. |
+| GitHub Actions | `GEMINI_API_KEY`, `TYPESAFE_API_KEY`, and `SONAR_TOKEN` are repository Actions secrets. `GITHUB_TOKEN` is the short-lived workflow token. The solver workflow has `contents: write` and `pull-requests: write`; the build workflow reads contents; the progress workflow has `contents: write`. |
 | SonarQube Cloud | Project key `marcelomiyake_autonomous-rust-leetcode-solver-pipeline`, organization `marcelomiyake`, sources `src`, LCOV path `lcov.info`, and `sonar.qualitygate.wait=true`. |
 
 The default model and generation settings are intentionally visible in
@@ -89,6 +96,12 @@ wait for a development interval.
 - Create the Google AI Studio key as a restricted/auth key, then save it in the
   repository’s **Settings → Secrets and variables → Actions** as
   `GEMINI_API_KEY`. Do not put it in a workflow variable, issue, log, or file.
+- Create a TypeSafe dashboard API key and save it in the same Actions secret
+  store as `TYPESAFE_API_KEY`. The key is exposed only to the Jev assessment
+  step. It is not exposed to Gemini, Rust compilation, tests, or pull-request
+  publication. TypeSafe's current model documentation lists Jev as usage-priced,
+  so it should not be treated as a free-tier service without checking the
+  account's current plan and limits.
 - Save a SonarQube Cloud token with analysis permission as `SONAR_TOKEN` in the
   same Actions secret store. Fork pull requests do not receive either secret, and
   the Sonar step is skipped for them.

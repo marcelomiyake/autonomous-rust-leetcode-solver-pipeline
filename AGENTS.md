@@ -7,6 +7,7 @@ These instructions apply to the entire repository. Read `README.md` before chang
 - The repository now has a minimal Rust library crate, an authorized challenge inbox, a Gemini candidate solver, a merge-gated progress store, and daily/manual GitHub workflows. It still has no problem solutions until a maintainer supplies an authorized challenge input.
 - `.github/workflows/build.yml` runs a SonarCloud scan on pushes to `main` and on pull requests. `sonar-project.properties` contains the project key `marcelomiyake_autonomous-rust-leetcode-solver-pipeline` and organization `marcelomiyake`.
 - Treat the authorized challenge contents and generated solutions as data that still require maintainer review. Update the README when implementation changes the pipeline or the repository's status.
+- Each authorized challenge records the human `leetcode_difficulty`; the solver runs a separate TypeSafe Jev Score assessment and publishes the structured result under `state/assessments/` with the solution pull request.
 
 ## Problem and input requirements
 
@@ -19,7 +20,7 @@ These instructions apply to the entire repository. Read `README.md` before chang
 - Keep each solution in a focused Rust module with tests for examples, edge cases, and relevant constraints. Put shared types in `src/common/` only when they are genuinely shared.
 - Treat generated source as a candidate. Parse and validate it, limit repair attempts, and never mark or publish it as solved after a failed check.
 - Advance progress state only after publication succeeds so a failed run remains retryable. Avoid committing secrets, tokens, or generated coverage files.
-- Keep `GEMINI_API_KEY` and `SONAR_TOKEN` in GitHub Actions secrets only. Generated code must be compiled without those secrets or persisted checkout credentials in its environment.
+- Keep `GEMINI_API_KEY`, `TYPESAFE_API_KEY`, and `SONAR_TOKEN` in GitHub Actions secrets only. Generated code must be compiled without those secrets or persisted checkout credentials in its environment. Expose `TYPESAFE_API_KEY` only to the Jev assessment step, never to Gemini or Rust validation.
 - Keep the final solver schedule at one run per day; use `workflow_dispatch` for rapid development runs instead of committing a short-lived schedule.
 - Preserve the existing SonarCloud project identity when changing scanner configuration. Align `sonar.rust.lcov.reportPaths` with the path actually produced by `cargo-llvm-cov`; configure coverage thresholds and Quality Gate conditions explicitly if they become requirements.
 

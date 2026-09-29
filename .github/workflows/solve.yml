@@ -52,6 +52,19 @@ jobs:
             --open-branches .pipeline/open-branches.txt \
             --github-output "$GITHUB_OUTPUT"
 
+      - name: Analyze difficulty with TypeSafe Jev
+        id: assess
+        if: steps.select.outputs.found == 'true'
+        env:
+          CHALLENGE_PATH: ${{ steps.select.outputs.challenge_path }}
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+          JEV_MODEL: jev-latest
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py assess-jev \
+            --challenge-path "$CHALLENGE_PATH" \
+            --github-output "$GITHUB_OUTPUT"
+
       - name: Ask Gemini for an initial candidate
         id: generate
         if: steps.select.outputs.found == 'true'
@@ -159,7 +172,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$branch"
-          git add "src/problems/${MODULE_NAME}.rs" src/problems/mod.rs
+          git add "src/problems/${MODULE_NAME}.rs" src/problems/mod.rs "state/assessments/${CHALLENGE_ID}.json"
           git commit -m "feat: add LeetCode ${CHALLENGE_ID} solution"
           if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
             git fetch origin "$branch"

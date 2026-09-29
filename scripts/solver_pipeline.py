@@ -28,12 +28,50 @@ DEFAULT_TEMPERATURE = 0.2
 DEFAULT_EFFORT = "medium"
 DEFAULT_MAX_OUTPUT_TOKENS = 12_000
 DEFAULT_API_BASE_URL = "https://generativelanguage.googleapis.com"
+DEFAULT_TYPESAFE_API_BASE_URL = "https://api.typesafe.ai"
+DEFAULT_JEV_MODEL = "jev-latest"
+JEV_QUESTION_ID = "algorithmic_difficulty"
 MAX_CHALLENGE_CHARS = 120_000
 MAX_SOURCE_CHARS = 120_000
 MAX_DIAGNOSTIC_CHARS = 40_000
 MODULE_ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 BRANCH_PATTERN = re.compile(r"^ai/solution-([a-z0-9]+(?:-[a-z0-9]+)*)$")
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+JEV_DIFFICULTY_LEVELS = (
+    (
+        "very-easy",
+        "Very easy: direct implementation with no meaningful algorithmic choice and only routine edge cases.",
+    ),
+    (
+        "easy",
+        "Easy: one familiar technique or data structure solves the problem with straightforward reasoning.",
+    ),
+    (
+        "moderate",
+        "Moderate: requires combining constraints, choosing an appropriate technique, or handling several non-obvious cases.",
+    ),
+    (
+        "hard",
+        "Hard: requires non-trivial algorithmic insight, careful invariants, or substantial implementation detail.",
+    ),
+    (
+        "very-hard",
+        "Very hard: demands advanced insight or multiple interacting techniques and is easy to get subtly wrong.",
+    ),
+)
+JEV_DIFFICULTY_BANDS = {
+    "very-easy": "easy",
+    "easy": "easy",
+    "moderate": "medium",
+    "hard": "hard",
+    "very-hard": "hard",
+}
+JEV_DIFFICULTY_INSTRUCTIONS = (
+    "From an expert algorithmic programmer's point of view, how difficult is it to produce a "
+    "correct Rust solution for this problem? Judge only the supplied requirements, constraints, "
+    "examples, and function signature. Do not write code or an explanation, and do not use the "
+    "LeetCode difficulty label as evidence."
+)
 FORBIDDEN_SOURCE_PATTERNS = (
     re.compile(r"\bunsafe\b", re.IGNORECASE),
     re.compile(r"\bfn\s+main\b"),
@@ -109,6 +147,7 @@ def load_challenge(path: Path) -> dict[str, Any]:
     required = (
         "id",
         "title",
+        "leetcode_difficulty",
         "challenge_date",
         "source_type",
         "source_url",
@@ -126,8 +165,12 @@ def load_challenge(path: Path) -> dict[str, Any]:
     problem_id = value["id"]
     if not isinstance(problem_id, str) or not MODULE_ID_PATTERN.fullmatch(problem_id):
         raise PipelineError("challenge id must be lowercase kebab-case")
+    if path.stem != problem_id:
+        raise PipelineError("challenge filename must match its id")
     if not isinstance(value["title"], str) or not value["title"].strip():
         raise PipelineError("challenge title must be a non-empty string")
+    if value["leetcode_difficulty"] not in {"easy", "medium", "hard"}:
+        raise PipelineError("leetcode_difficulty must be easy, medium, or hard")
     for date_field in ("challenge_date", "rust_support_checked_at"):
         date_value = value[date_field]
         if not isinstance(date_value, str) or not DATE_PATTERN.fullmatch(date_value):
@@ -358,6 +401,219 @@ DIAGNOSTICS END
     return prompt
 
 
+def jev_settings() -> dict[str, str]:
+    model = os.environ.get("JEV_MODEL", DEFAULT_JEV_MODEL).strip()
+    if not model or "/" in model or " " in model:
+        raise PipelineError("JEV_MODEL must be a simple model name")
+    base_url = os.environ.get("TYPESAFE_API_BASE_URL", DEFAULT_TYPESAFE_API_BASE_URL).rstrip("/")
+    if not base_url.startswith("https://"):
+        raise PipelineError("TYPESAFE_API_BASE_URL must use HTTPS")
+    if not os.environ.get("TYPESAFE_API_KEY", "").strip():
+        raise PipelineError("TYPESAFE_API_KEY is required for Jev assessment")
+    return {"model": model, "base_url": base_url}
+
+
+def jev_request_body(challenge: dict[str, Any], settings: dict[str, str]) -> dict[str, Any]:
+    state = {
+        "problem_id": challenge["id"],
+        "title": challenge["title"],
+        "description": challenge["description"],
+        "constraints": challenge["constraints"],
+        "rust_signature": challenge["rust_signature"],
+        "examples": challenge["examples"],
+    }
+    return {
+        "state": state,
+        "model": settings["model"],
+        "questions": {
+            JEV_QUESTION_ID: {
+                "type": "score",
+                "instructions": JEV_DIFFICULTY_INSTRUCTIONS,
+                "criteria": [description for _, description in JEV_DIFFICULTY_LEVELS],
+            }
+        },
+    }
+
+
+def _nonnegative_int(value: Any, field_name: str) -> int:
+    if isinstance(value, bool):
+        raise PipelineError(f"Jev response field {field_name} must be an integer")
+    try:
+        integer = int(value)
+    except (TypeError, ValueError) as exc:
+        raise PipelineError(f"Jev response field {field_name} must be an integer") from exc
+    if integer < 0:
+        raise PipelineError(f"Jev response field {field_name} must be non-negative")
+    return integer
+
+
+def parse_jev_response(payload: dict[str, Any]) -> dict[str, Any]:
+    model = payload.get("model")
+    if not isinstance(model, str) or not model.strip():
+        raise PipelineError("Jev response did not identify the responding model")
+    answers = payload.get("answers")
+    answer = answers.get(JEV_QUESTION_ID) if isinstance(answers, dict) else None
+    if not isinstance(answer, dict) or answer.get("type") != "score":
+        raise PipelineError("Jev response did not contain the algorithmic difficulty score")
+
+    score = answer.get("score")
+    if isinstance(score, bool) or not isinstance(score, (int, float)):
+        raise PipelineError("Jev score must be numeric")
+    if not 0 <= float(score) <= len(JEV_DIFFICULTY_LEVELS) - 1:
+        raise PipelineError("Jev score is outside the configured difficulty scale")
+
+    confidence = answer.get("confidence")
+    if isinstance(confidence, bool) or not isinstance(confidence, (int, float)):
+        raise PipelineError("Jev confidence must be numeric")
+    if not 0 <= float(confidence) <= 1:
+        raise PipelineError("Jev confidence must be between 0 and 1")
+
+    raw_probabilities = answer.get("probabilities")
+    if not isinstance(raw_probabilities, dict):
+        raise PipelineError("Jev score did not contain probabilities")
+    probabilities: dict[str, float] = {}
+    for index in range(len(JEV_DIFFICULTY_LEVELS)):
+        raw_value = raw_probabilities.get(str(index), raw_probabilities.get(index))
+        if isinstance(raw_value, bool) or not isinstance(raw_value, (int, float)):
+            raise PipelineError(f"Jev probability for level {index} must be numeric")
+        probability = float(raw_value)
+        if not 0 <= probability <= 1:
+            raise PipelineError(f"Jev probability for level {index} must be between 0 and 1")
+        probabilities[str(index)] = probability
+
+    total_probability = sum(probabilities.values())
+    if abs(total_probability - 1.0) > 0.05:
+        raise PipelineError("Jev probabilities must sum to approximately 1")
+
+    raw_legend = answer.get("legend")
+    if isinstance(raw_legend, dict):
+        legend = {str(index): str(raw_legend.get(str(index), raw_legend.get(index, ""))) for index in range(len(JEV_DIFFICULTY_LEVELS))}
+    else:
+        legend = {str(index): description for index, (_, description) in enumerate(JEV_DIFFICULTY_LEVELS)}
+    dominant_index = max(range(len(JEV_DIFFICULTY_LEVELS)), key=lambda index: probabilities[str(index)])
+    dominant_level = JEV_DIFFICULTY_LEVELS[dominant_index][0]
+    usage = payload.get("usage", {})
+    if not isinstance(usage, dict):
+        raise PipelineError("Jev response usage must be an object")
+    return {
+        "model": model,
+        "score": float(score),
+        "confidence": float(confidence),
+        "probabilities": probabilities,
+        "legend": legend,
+        "dominant_level": dominant_level,
+        "dominant_level_index": dominant_index,
+        "dominant_band": JEV_DIFFICULTY_BANDS[dominant_level],
+        "usage": {
+            "input_tokens": _nonnegative_int(usage.get("input_tokens", 0), "usage.input_tokens"),
+            "output_tokens": _nonnegative_int(usage.get("output_tokens", 0), "usage.output_tokens"),
+        },
+    }
+
+
+def call_jev(challenge: dict[str, Any], settings: dict[str, str]) -> dict[str, Any]:
+    api_key = os.environ.get("TYPESAFE_API_KEY", "").strip()
+    request_body = jev_request_body(challenge, settings)
+    encoded = json.dumps(request_body, ensure_ascii=False).encode("utf-8")
+    url = f"{settings['base_url']}/v1/systemone"
+    last_error: Exception | None = None
+    retryable_statuses = {408, 429, 500, 502, 503, 504}
+    for attempt in range(3):
+        request = Request(
+            url,
+            data=encoded,
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            method="POST",
+        )
+        started = time.monotonic()
+        try:
+            with urlopen(request, timeout=120) as response:  # nosec B310: URL is constrained to HTTPS.
+                payload = json.loads(response.read().decode("utf-8"))
+            if not isinstance(payload, dict):
+                raise PipelineError("Jev response must be a JSON object")
+            result = parse_jev_response(payload)
+            result["requested_model"] = settings["model"]
+            result["elapsed_seconds"] = round(time.monotonic() - started, 3)
+            return result
+        except HTTPError as exc:
+            last_error = PipelineError(f"Jev API returned HTTP {exc.code}")
+            if exc.code not in retryable_statuses:
+                break
+        except (URLError, TimeoutError, json.JSONDecodeError, PipelineError) as exc:
+            last_error = exc
+        if attempt < 2:
+            time.sleep(2**attempt)
+    raise PipelineError(f"Jev request failed after retries: {last_error}") from last_error
+
+
+def assessment_path(root: Path, problem_id: str) -> Path:
+    return root / "state" / "assessments" / f"{problem_id}.json"
+
+
+def load_jev_assessment(root: Path, problem_id: str) -> dict[str, Any] | None:
+    path = assessment_path(root, problem_id)
+    if not path.exists():
+        return None
+    value = load_json(path)
+    if not isinstance(value, dict) or not isinstance(value.get("ai_difficulty"), dict):
+        raise PipelineError(f"invalid Jev assessment: {path}")
+    return value
+
+
+def write_jev_assessment(root: Path, challenge: dict[str, Any], result: dict[str, Any]) -> Path:
+    destination = assessment_path(root, challenge["id"])
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    levels = [
+        {"index": index, "name": name, "description": description}
+        for index, (name, description) in enumerate(JEV_DIFFICULTY_LEVELS)
+    ]
+    value = {
+        "schema_version": 1,
+        "problem_id": challenge["id"],
+        "leetcode_difficulty": challenge["leetcode_difficulty"],
+        "provider": "TypeSafe",
+        "requested_model": result["requested_model"],
+        "model": result["model"],
+        "question": {
+            "id": JEV_QUESTION_ID,
+            "type": "score",
+            "instructions": JEV_DIFFICULTY_INSTRUCTIONS,
+            "levels": levels,
+        },
+        "ai_difficulty": {
+            "score": result["score"],
+            "scale_max": len(JEV_DIFFICULTY_LEVELS) - 1,
+            "dominant_level": result["dominant_level"],
+            "dominant_band": result["dominant_band"],
+            "confidence": result["confidence"],
+            "probabilities": result["probabilities"],
+            "legend": result["legend"],
+        },
+        "usage": result["usage"],
+        "elapsed_seconds": result["elapsed_seconds"],
+        "assessed_at": iso_now(),
+    }
+    destination.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+    return destination
+
+
+def assess_jev(args: argparse.Namespace) -> int:
+    root = root_from_argument(args.root)
+    challenge = load_challenge(challenge_path(root, args.challenge_path))
+    result = call_jev(challenge, jev_settings())
+    destination = write_jev_assessment(root, challenge, result)
+    relative = destination.relative_to(root).as_posix()
+    print(
+        f"Wrote Jev assessment {relative}: {result['dominant_level']} "
+        f"(score {result['score']:.2f}, confidence {result['confidence']:.2f})."
+    )
+    write_github_output(
+        args.github_output,
+        {"assessment_path": relative, "jev_model": result["model"]},
+    )
+    return 0
+
+
 def call_gemini(prompt: str, settings: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
     api_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if not api_key:
@@ -528,13 +784,22 @@ def aggregate_stats(run: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def metadata_header(problem_id: str, run: dict[str, Any]) -> str:
+def metadata_header(
+    problem_id: str,
+    run: dict[str, Any],
+    challenge: dict[str, Any] | None = None,
+    assessment: dict[str, Any] | None = None,
+) -> str:
     stats = aggregate_stats(run)
-    return "\n".join(
+    lines = [
+        "// BEGIN GENERATED SOLUTION METADATA",
+        "// Generated by the authorized Gemini solver pipeline.",
+        f"// Problem: {problem_id}",
+    ]
+    if challenge is not None:
+        lines.append(f"// LeetCode difficulty: {challenge['leetcode_difficulty']}")
+    lines.extend(
         [
-            "// BEGIN GENERATED SOLUTION METADATA",
-            "// Generated by the authorized Gemini solver pipeline.",
-            f"// Problem: {problem_id}",
             f"// Model: {run['model']}",
             f"// Effort: {run['effort']} (thinkingBudget={run['thinking_budget']})",
             f"// Temperature: {float(run['temperature']):.2f}",
@@ -545,10 +810,24 @@ def metadata_header(problem_id: str, run: dict[str, Any]) -> str:
             ),
             f"// Attempts: {stats['attempts']}",
             f"// Solver wall time: {stats['elapsed_seconds']:.2f}s",
-            "// END GENERATED SOLUTION METADATA",
-            "",
         ]
     )
+    if assessment is not None:
+        ai_difficulty = assessment["ai_difficulty"]
+        lines.extend(
+            [
+                f"// Jev model: {assessment['model']}",
+                (
+                    "// Jev AI difficulty: "
+                    f"{ai_difficulty['dominant_level']} "
+                    f"(score={float(ai_difficulty['score']):.2f}/{ai_difficulty['scale_max']}, "
+                    f"confidence={float(ai_difficulty['confidence']):.2f})"
+                ),
+                f"// Jev assessment: state/assessments/{problem_id}.json",
+            ]
+        )
+    lines.extend(["// END GENERATED SOLUTION METADATA", ""])
+    return "\n".join(lines)
 
 
 def remove_metadata_header(source: str) -> str:
@@ -564,7 +843,11 @@ def write_solution(root: Path, challenge: dict[str, Any], run: dict[str, Any], r
     destination = source_path(root, challenge["id"])
     destination.parent.mkdir(parents=True, exist_ok=True)
     body = remove_metadata_header(rust_source).strip() + "\n"
-    destination.write_text(metadata_header(challenge["id"], run) + body, encoding="utf-8")
+    assessment = load_jev_assessment(root, challenge["id"])
+    destination.write_text(
+        metadata_header(challenge["id"], run, challenge, assessment) + body,
+        encoding="utf-8",
+    )
 
     modules = root / "src" / "problems" / "mod.rs"
     current = modules.read_text(encoding="utf-8") if modules.exists() else ""
@@ -609,7 +892,14 @@ def generate(args: argparse.Namespace, repair: bool = False) -> int:
 
 def run_command(root: Path, command: list[str]) -> tuple[int, str]:
     environment = os.environ.copy()
-    for key in ("GEMINI_API_KEY", "GOOGLE_API_KEY", "SONAR_TOKEN", "GITHUB_TOKEN", "GH_TOKEN"):
+    for key in (
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "TYPESAFE_API_KEY",
+        "SONAR_TOKEN",
+        "GITHUB_TOKEN",
+        "GH_TOKEN",
+    ):
         environment.pop(key, None)
     environment["CARGO_TERM_COLOR"] = "never"
     environment["RUST_BACKTRACE"] = "1"
@@ -665,7 +955,13 @@ def finalize(args: argparse.Namespace) -> int:
     if not destination.exists():
         raise PipelineError(f"cannot finalize missing candidate: {destination}")
     body = remove_metadata_header(destination.read_text(encoding="utf-8"))
-    destination.write_text(metadata_header(challenge["id"], run) + body.strip() + "\n", encoding="utf-8")
+    assessment = load_jev_assessment(root, challenge["id"])
+    if assessment is None:
+        raise PipelineError(f"cannot finalize without Jev assessment: {assessment_path(root, challenge['id'])}")
+    destination.write_text(
+        metadata_header(challenge["id"], run, challenge, assessment) + body.strip() + "\n",
+        encoding="utf-8",
+    )
     stats = aggregate_stats(run)
     print(
         f"Finalized {challenge['id']}: {stats['total_tokens']} total tokens, "
@@ -678,18 +974,43 @@ def write_pr_body(args: argparse.Namespace) -> int:
     root = root_from_argument(args.root)
     challenge = load_challenge(challenge_path(root, args.challenge_path))
     run = load_run(root, challenge["id"])
+    assessment = load_jev_assessment(root, challenge["id"])
+    if assessment is None:
+        raise PipelineError(f"cannot write pull request body without Jev assessment: {assessment_path(root, challenge['id'])}")
     stats = aggregate_stats(run)
+    ai_difficulty = assessment["ai_difficulty"]
+    probabilities = ", ".join(
+        f"{index}={float(probability):.2f}"
+        for index, probability in ai_difficulty["probabilities"].items()
+    )
     body = f"""## Gemini candidate
 
 This pull request contains a generated Rust candidate for the maintainer-supplied challenge **{challenge['id']}** ({challenge['title']}). The source URL and Rust-language check are recorded in the challenge input; the problem statement is intentionally not copied into this pull request.
 
 - Source: {challenge['source_url']}
 - Rust support checked: {challenge['rust_support_checked_at']}
+- LeetCode difficulty: `{challenge['leetcode_difficulty']}`
 - Model: `{run['model']}`
 - Effort: `{run['effort']}` (`thinkingBudget={run['thinking_budget']}`)
 - Temperature: `{float(run['temperature']):.2f}`
 - Tokens (input/output/thinking/total): `{stats['input_tokens']}/{stats['output_tokens']}/{stats['thinking_tokens']}/{stats['total_tokens']}`
 - Solver wall time: `{stats['elapsed_seconds']:.2f}s`
+
+## Jev AI difficulty assessment
+
+The TypeSafe Jev assessment is a structured Score judgment from a five-level
+algorithmic-difficulty rubric. It is a model perspective, not a correctness
+guarantee and not a replacement for reviewer judgment.
+
+- Requested model: `{assessment['requested_model']}`
+- Responding model: `{assessment['model']}`
+- Dominant level: `{ai_difficulty['dominant_level']}` (`{ai_difficulty['dominant_band']}` band)
+- Score: `{float(ai_difficulty['score']):.2f}/{ai_difficulty['scale_max']}`
+- Confidence: `{float(ai_difficulty['confidence']):.2f}`
+- Probabilities by rubric index: `{probabilities}`
+- Tokens (input/output): `{assessment['usage']['input_tokens']}/{assessment['usage']['output_tokens']}`
+- Assessment wall time: `{float(assessment['elapsed_seconds']):.2f}s`
+- Stored assessment: `state/assessments/{challenge['id']}.json`
 
 The candidate was checked with `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy -D warnings` before this branch was published. SonarQube Cloud runs separately on the pull request. Reviewers should confirm correctness and licensing before merging.
 """
@@ -746,6 +1067,12 @@ def build_parser() -> argparse.ArgumentParser:
         command_parser.add_argument("--challenge-path", required=True)
         command_parser.add_argument("--github-output")
         command_parser.set_defaults(handler=lambda args, repair=repair: generate(args, repair))
+
+    assess_parser = subparsers.add_parser("assess-jev")
+    assess_parser.add_argument("--root")
+    assess_parser.add_argument("--challenge-path", required=True)
+    assess_parser.add_argument("--github-output")
+    assess_parser.set_defaults(handler=assess_jev)
 
     validate_parser = subparsers.add_parser("validate")
     validate_parser.add_argument("--root")
