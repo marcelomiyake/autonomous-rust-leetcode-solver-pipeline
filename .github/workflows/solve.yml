@@ -1,0 +1,174 @@
+name: Generate LeetCode solution candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      challenge_path:
+        description: "Optional JSON challenge path under challenges/"
+        required: false
+        type: string
+        default: ""
+  schedule:
+    - cron: "17 0 * * *"
+
+concurrency:
+  group: leetcode-solver
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate:
+    if: github.repository == 'marcelomiyake/autonomous-rust-leetcode-solver-pipeline'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+          # Generated code is compiled below; do not leave a GitHub token in .git/config.
+          persist-credentials: false
+
+      - name: Collect open automated solution branches
+        id: open_branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p .pipeline
+          gh pr list --state open --limit 100 --json headRefName --jq '.[].headRefName' > .pipeline/open-branches.txt
+
+      - name: Select an authorized Rust challenge
+        id: select
+        env:
+          CHALLENGE_PATH: ${{ github.event.inputs.challenge_path }}
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py select \
+            --challenge-path "${CHALLENGE_PATH:-}" \
+            --open-branches .pipeline/open-branches.txt \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Ask Gemini for an initial candidate
+        id: generate
+        if: steps.select.outputs.found == 'true'
+        env:
+          CHALLENGE_PATH: ${{ steps.select.outputs.challenge_path }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_EFFORT: medium
+          GEMINI_TEMPERATURE: "0.2"
+          GEMINI_MAX_OUTPUT_TOKENS: "12000"
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py generate \
+            --challenge-path "$CHALLENGE_PATH" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Validate candidate (attempt 1)
+        id: validate_1
+        if: steps.select.outputs.found == 'true'
+        continue-on-error: true
+        run: python3 scripts/solver_pipeline.py validate
+
+      - name: Ask Gemini to repair candidate (attempt 2)
+        if: steps.validate_1.outcome == 'failure'
+        env:
+          CHALLENGE_PATH: ${{ steps.select.outputs.challenge_path }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_EFFORT: medium
+          GEMINI_TEMPERATURE: "0.2"
+          GEMINI_MAX_OUTPUT_TOKENS: "12000"
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py repair --challenge-path "$CHALLENGE_PATH"
+
+      - name: Validate candidate (attempt 2)
+        id: validate_2
+        if: steps.validate_1.outcome == 'failure'
+        continue-on-error: true
+        run: python3 scripts/solver_pipeline.py validate
+
+      - name: Ask Gemini to repair candidate (attempt 3)
+        if: steps.validate_2.outcome == 'failure'
+        env:
+          CHALLENGE_PATH: ${{ steps.select.outputs.challenge_path }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_EFFORT: medium
+          GEMINI_TEMPERATURE: "0.2"
+          GEMINI_MAX_OUTPUT_TOKENS: "12000"
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py repair --challenge-path "$CHALLENGE_PATH"
+
+      - name: Validate candidate (attempt 3)
+        id: validate_3
+        if: steps.validate_2.outcome == 'failure'
+        continue-on-error: true
+        run: python3 scripts/solver_pipeline.py validate
+
+      - name: Stop after failed validation
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          steps.validate_1.outcome == 'failure' &&
+          steps.validate_2.outcome == 'failure' &&
+          steps.validate_3.outcome == 'failure'
+        run: |
+          echo "The bounded repair loop did not produce a passing candidate."
+          exit 1
+
+      - name: Finalize solver metadata
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          (steps.validate_1.outcome == 'success' ||
+           steps.validate_2.outcome == 'success' ||
+           steps.validate_3.outcome == 'success')
+        env:
+          CHALLENGE_PATH: ${{ steps.select.outputs.challenge_path }}
+        run: python3 scripts/solver_pipeline.py finalize --challenge-path "$CHALLENGE_PATH"
+
+      - name: Prepare pull request description
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          (steps.validate_1.outcome == 'success' ||
+           steps.validate_2.outcome == 'success' ||
+           steps.validate_3.outcome == 'success')
+        env:
+          CHALLENGE_PATH: ${{ steps.select.outputs.challenge_path }}
+        run: python3 scripts/solver_pipeline.py write-pr-body --challenge-path "$CHALLENGE_PATH"
+
+      - name: Publish candidate branch and pull request
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          (steps.validate_1.outcome == 'success' ||
+           steps.validate_2.outcome == 'success' ||
+           steps.validate_3.outcome == 'success')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHALLENGE_ID: ${{ steps.select.outputs.challenge_id }}
+          MODULE_NAME: ${{ steps.generate.outputs.module_name }}
+        run: |
+          set -euo pipefail
+          branch="ai/solution-${CHALLENGE_ID}"
+          gh auth setup-git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add "src/problems/${MODULE_NAME}.rs" src/problems/mod.rs
+          git commit -m "feat: add LeetCode ${CHALLENGE_ID} solution"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            git fetch origin "$branch"
+            git push --force-with-lease origin "$branch"
+          else
+            git push origin "$branch"
+          fi
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "feat: add LeetCode ${CHALLENGE_ID} solution" \
+            --body-file .pipeline/pr-body.md
