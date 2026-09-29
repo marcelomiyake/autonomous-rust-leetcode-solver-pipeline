@@ -31,7 +31,7 @@ jobs:
           set -o pipefail
           if cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info 2>&1 | tee .pipeline-coverage.log; then
             rm -f .pipeline-coverage.log
-          elif rg -q "no coverage data found" .pipeline-coverage.log; then
+          elif grep -q "no coverage data found" .pipeline-coverage.log; then
             # The initial scaffold has no executable Rust item yet. Keep the report
             # valid so Sonar can run; solution PRs produce real coverage data.
             printf 'TN:\nend_of_record\n' > lcov.info
