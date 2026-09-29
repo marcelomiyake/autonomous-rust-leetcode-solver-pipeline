@@ -11,7 +11,9 @@ integration are implemented. No challenge has been added to `challenges/` and no
 generated solution has been published yet; the first run therefore exits
 successfully with “no eligible challenge” until a maintainer adds an authorized
 input file. The external TypeSafe key still must be present as the documented
-GitHub Actions secret before an eligible challenge is run.
+GitHub Actions secret before an eligible challenge is run, and that secret is
+now configured. The Gemini secret still needs to be added before generation can
+run.
 
 ## Problem eligibility
 
@@ -80,9 +82,9 @@ SonarQube Cloud [imports coverage reports produced by other tools](https://docs.
 | Service | Configuration |
 | --- | --- |
 | Challenge source | Maintainer-supplied or authorized integration input only; there is no LeetCode crawler. |
-| Google AI Studio | A dedicated project and a Gemini API auth key restricted to the Gemini API. The key is used through the `x-goog-api-key` request header and is never stored in the repository. The exact project/key status is recorded below after the external setup is completed. |
-| TypeSafe AI | Jev is called through `POST https://api.typesafe.ai/v1/systemone` with `model=jev-latest`, a single Score question, and `Authorization: Bearer`. The response model version is stored per assessment. The TypeSafe key is never written to the repository. |
-| GitHub Actions | `GEMINI_API_KEY`, `TYPESAFE_API_KEY`, and `SONAR_TOKEN` are repository Actions secrets. `GITHUB_TOKEN` is the short-lived workflow token. The solver workflow has `contents: write` and `pull-requests: write`; the build workflow reads contents; the progress workflow has `contents: write`. |
+| Google AI Studio | Project `Gemini Project` (`gen-lang-client-0062045673`) is present on the Free tier and currently lists an active key named `Gemini API Key`. The pipeline uses that key through the `x-goog-api-key` header; its value is never stored in the repository. The `GEMINI_API_KEY` GitHub secret is still pending because the AI Studio copy action returned a provider-side network error; no unrestricted replacement key was created. |
+| TypeSafe AI | Jev is called through `POST https://api.typesafe.ai/v1/systemone` with `model=jev-latest`, a single Score question, and `Authorization: Bearer`. The response model version is stored per assessment. `TYPESAFE_API_KEY` is set as a repository Actions secret; the key is never written to the repository. |
+| GitHub Actions | Verified repository secrets: `SONAR_TOKEN` and `TYPESAFE_API_KEY`. `GEMINI_API_KEY` remains to be added from the existing Google AI Studio key. `GITHUB_TOKEN` is the short-lived workflow token. The solver workflow has `contents: write` and `pull-requests: write`; the build workflow reads contents; the progress workflow has `contents: write`. |
 | SonarQube Cloud | Project key `marcelomiyake_autonomous-rust-leetcode-solver-pipeline`, organization `marcelomiyake`, sources `src`, LCOV path `lcov.info`, and `sonar.qualitygate.wait=true`. |
 
 The default model and generation settings are intentionally visible in
@@ -93,9 +95,12 @@ wait for a development interval.
 
 ### Secret handling
 
-- Create the Google AI Studio key as a restricted/auth key, then save it in the
-  repository’s **Settings → Secrets and variables → Actions** as
-  `GEMINI_API_KEY`. Do not put it in a workflow variable, issue, log, or file.
+- Use an API-restricted Google AI Studio key for the Free-tier Gemini project,
+  then save it in the repository’s **Settings → Secrets and variables → Actions**
+  as `GEMINI_API_KEY`. Do not put it in a workflow variable, issue, log, or
+  file. The repository currently has an active project key available in AI
+  Studio, but the secret has not been added because the provider copy operation
+  is temporarily failing.
 - Create a TypeSafe dashboard API key and save it in the same Actions secret
   store as `TYPESAFE_API_KEY`. The key is exposed only to the Jev assessment
   step. It is not exposed to Gemini, Rust compilation, tests, or pull-request
