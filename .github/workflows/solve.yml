@@ -1,0 +1,249 @@
+name: Generate LeetCode solution candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      challenge_path:
+        description: "Optional JSON challenge path under challenges/"
+        required: false
+        type: string
+        default: ""
+      mode:
+        description: "Validate only or publish directly to main"
+        required: true
+        type: choice
+        options:
+          - dry-run
+          - publish
+        default: dry-run
+  schedule:
+    # Daily at 04:17 UTC (01:17 BRT). Off-peak window for Gemini free tier capacity.
+    - cron: "17 4 * * *"
+
+concurrency:
+  group: leetcode-solver
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.repository == 'marcelomiyake/autonomous-rust-leetcode-solver-pipeline'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RUN_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'publish' }}
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+          # Generated code is compiled below; do not leave a GitHub token in .git/config.
+          persist-credentials: false
+
+      - name: Select an authorized Rust challenge
+        id: select
+        env:
+          CHALLENGE_PATH: ${{ inputs.challenge_path }}
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py select \
+            --challenge-path "${CHALLENGE_PATH:-}" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Lazily hydrate the selected challenge body
+        id: hydrate
+        if: steps.select.outputs.found == 'true'
+        env:
+          CHALLENGE_PATH: ${{ steps.select.outputs.challenge_path }}
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py hydrate \
+            --challenge-path "$CHALLENGE_PATH" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Analyze difficulty with TypeSafe Jev
+        id: assess
+        if: steps.select.outputs.found == 'true'
+        env:
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+          JEV_MODEL: jev-latest
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py assess-jev \
+            --challenge-path "$CHALLENGE_PATH" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Ask Gemini for an initial candidate
+        id: generate
+        if: steps.select.outputs.found == 'true'
+        env:
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_FALLBACK_MODEL: gemini-3.7-flash
+          GEMINI_EFFORT: medium
+          GEMINI_TEMPERATURE: "1.0"
+          GEMINI_MAX_OUTPUT_TOKENS: "12000"
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py generate \
+            --challenge-path "$CHALLENGE_PATH" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Validate candidate (attempt 1)
+        id: validate_1
+        if: steps.select.outputs.found == 'true'
+        continue-on-error: true
+        run: python3 scripts/solver_pipeline.py validate
+
+      - name: Ask Gemini to repair candidate (attempt 2)
+        if: steps.validate_1.outcome == 'failure'
+        env:
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_FALLBACK_MODEL: gemini-3.7-flash
+          GEMINI_EFFORT: medium
+          GEMINI_TEMPERATURE: "1.0"
+          GEMINI_MAX_OUTPUT_TOKENS: "12000"
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py repair --challenge-path "$CHALLENGE_PATH"
+
+      - name: Validate candidate (attempt 2)
+        id: validate_2
+        if: steps.validate_1.outcome == 'failure'
+        continue-on-error: true
+        run: python3 scripts/solver_pipeline.py validate
+
+      - name: Ask Gemini to repair candidate (attempt 3)
+        if: steps.validate_2.outcome == 'failure'
+        env:
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_FALLBACK_MODEL: gemini-3.7-flash
+          GEMINI_EFFORT: medium
+          GEMINI_TEMPERATURE: "1.0"
+          GEMINI_MAX_OUTPUT_TOKENS: "12000"
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py repair --challenge-path "$CHALLENGE_PATH"
+
+      - name: Validate candidate (attempt 3)
+        id: validate_3
+        if: steps.validate_2.outcome == 'failure'
+        continue-on-error: true
+        run: python3 scripts/solver_pipeline.py validate
+
+      - name: Stop after failed validation
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          steps.validate_1.outcome == 'failure' &&
+          steps.validate_2.outcome == 'failure' &&
+          steps.validate_3.outcome == 'failure'
+        run: |
+          echo "The bounded repair loop did not produce a passing candidate."
+          exit 1
+
+      - name: Finalize solver metadata
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          (steps.validate_1.outcome == 'success' ||
+           steps.validate_2.outcome == 'success' ||
+           steps.validate_3.outcome == 'success')
+        env:
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+        run: python3 scripts/solver_pipeline.py finalize --challenge-path "$CHALLENGE_PATH"
+
+      - name: Install LLVM coverage tools
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          (steps.validate_1.outcome == 'success' ||
+           steps.validate_2.outcome == 'success' ||
+           steps.validate_3.outcome == 'success')
+        run: |
+          set -euo pipefail
+          rustup component add llvm-tools-preview
+          cargo install cargo-llvm-cov --locked
+
+      - name: Generate LCOV coverage report
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          (steps.validate_1.outcome == 'success' ||
+           steps.validate_2.outcome == 'success' ||
+           steps.validate_3.outcome == 'success')
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+
+      - name: SonarQube Quality Gate
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          (steps.validate_1.outcome == 'success' ||
+           steps.validate_2.outcome == 'success' ||
+           steps.validate_3.outcome == 'success')
+        uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Report successful dry run
+        if: >-
+          env.RUN_MODE == 'dry-run' &&
+          steps.select.outputs.found == 'true' &&
+          (steps.validate_1.outcome == 'success' ||
+           steps.validate_2.outcome == 'success' ||
+           steps.validate_3.outcome == 'success')
+        run: echo "Dry run passed for ${{ steps.select.outputs.challenge_id }}; main and progress were not changed."
+
+      - name: Publish validated solution directly to main
+        if: >-
+          env.RUN_MODE == 'publish' &&
+          steps.select.outputs.found == 'true' &&
+          (steps.validate_1.outcome == 'success' ||
+           steps.validate_2.outcome == 'success' ||
+           steps.validate_3.outcome == 'success')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHALLENGE_ID: ${{ steps.select.outputs.challenge_id }}
+          MODULE_NAME: ${{ steps.generate.outputs.module_name }}
+          FILE_NAME: ${{ steps.generate.outputs.file_name }}
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+        run: |
+          set -euo pipefail
+          gh auth setup-git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B main
+          git add "$CHALLENGE_PATH"
+          if [ -f "challenges/bodies/${CHALLENGE_ID}.json" ]; then
+            git add "challenges/bodies/${CHALLENGE_ID}.json"
+          fi
+          git add "src/problems/${FILE_NAME}.rs" src/problems/mod.rs "state/assessments/${CHALLENGE_ID}.json"
+          git commit -m "feat: add LeetCode ${CHALLENGE_ID} solution"
+          solution_commit="$(git rev-parse HEAD)"
+          python3 scripts/solver_pipeline.py record-progress \
+            --problem-id "$CHALLENGE_ID" \
+            --published-commit "$solution_commit"
+          git add state/progress.json
+          git commit -m "chore: record published LeetCode ${CHALLENGE_ID}"
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort
+              echo "Unable to rebase the generated commits onto origin/main." >&2
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "main changed while publishing; retrying (attempt $((attempt + 1))/3)."
+              sleep 2
+            fi
+          done
+          echo "Could not publish directly to main after three attempts." >&2
+          exit 1
+
