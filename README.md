@@ -110,6 +110,8 @@ schedule:
 
 This requests a run at minutes 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, and 55 of every hour. Scheduled runs publish verified solutions; manual runs default to `dry-run`. The `leetcode-solver` concurrency group prevents overlapping solver jobs and keeps the active run running when another trigger arrives. GitHub keeps at most one pending run in the group, replacing an older pending run when a newer one arrives.
 
+The five-minute interval is used while debugging delivery. After a scheduled run successfully generates, validates, and publishes a Gemini solution, restore the original daily cron `17 4 * * *` (04:17 UTC, 01:17 in São Paulo) and update these scheduling examples. A manual dry run alone does not meet that restoration condition.
+
 GitHub schedules are best effort: delivery can be delayed or dropped. The workflow must be enabled and present on the default branch (`main`). To diagnose delivery, inspect scheduled events separately from manual runs:
 
 ```sh

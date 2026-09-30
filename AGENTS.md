@@ -21,7 +21,7 @@ These instructions apply to the entire repository. Read `README.md` before chang
 - Treat generated source as a candidate. Parse and validate it, limit repair attempts, and never mark or publish it as solved after a failed check.
 - Advance progress state only after publication succeeds so a failed run remains retryable. Avoid committing secrets, tokens, or generated coverage files.
 - Keep `GEMINI_API_KEY`, `TYPESAFE_API_KEY`, and `SONAR_TOKEN` in GitHub Actions secrets only. Generated code must be compiled without those secrets or persisted checkout credentials in its environment. Expose `TYPESAFE_API_KEY` only to the Jev assessment step, never to Gemini or Rust validation.
-- Keep the solver schedule at `*/5 * * * *` (minutes 0, 5, 10, ..., 55), as requested by the maintainer. Use `workflow_dispatch` for immediate development runs. Preserve the shared concurrency group so scheduled and manual runs cannot publish simultaneously.
+- During schedule-delivery debugging, keep the solver schedule at `*/5 * * * *` (minutes 0, 5, 10, ..., 55). After a scheduled run successfully generates, validates, and publishes a Gemini solution, restore the original daily schedule `17 4 * * *` (04:17 UTC, 01:17 in São Paulo). Use `workflow_dispatch` for immediate development runs. Preserve the shared concurrency group so scheduled and manual runs cannot publish simultaneously.
 - Preserve the existing SonarCloud project identity when changing scanner configuration. Align `sonar.rust.lcov.reportPaths` with the path actually produced by `cargo-llvm-cov`; configure coverage thresholds and Quality Gate conditions explicitly if they become requirements.
 
 ## Model maintenance for Gemini free tier
