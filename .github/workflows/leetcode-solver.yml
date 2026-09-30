@@ -17,8 +17,8 @@ on:
           - publish
         default: dry-run
   schedule:
-    # Every five minutes at :00, :05, :10, ..., :55 UTC.
-    - cron: "*/5 * * * *"
+    # Daily at 04:17 UTC (01:17 in São Paulo).
+    - cron: "17 4 * * *"
 
 concurrency:
   group: leetcode-solver
@@ -209,7 +209,8 @@ jobs:
           CHALLENGE_ID: ${{ steps.select.outputs.challenge_id }}
           MODULE_NAME: ${{ steps.generate.outputs.module_name }}
           FILE_NAME: ${{ steps.generate.outputs.file_name }}
-          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+          # Publish the original manifest; the hydrated .pipeline payload is temporary.
+          CHALLENGE_PATH: ${{ steps.select.outputs.challenge_path }}
         run: |
           set -euo pipefail
           gh auth setup-git

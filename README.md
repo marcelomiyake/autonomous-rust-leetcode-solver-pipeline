@@ -9,11 +9,11 @@ An autonomous, guarded pipeline that sequentially discovers LeetCode problems, c
 
 ## Architecture & Workflow
 
-The pipeline runs every five minutes and can also be triggered manually via `workflow_dispatch`. It handles everything from problem discovery to atomic repository updates without manual intervention.
+The pipeline runs daily at 04:17 UTC (01:17 in São Paulo) and can also be triggered manually via `workflow_dispatch`. It handles everything from problem discovery to atomic repository updates without manual intervention.
 
 ```mermaid
 flowchart TD
-    Trigger["Trigger: Every five minutes or workflow_dispatch"] --> Discovery{"Discovery: Pending challenge in challenges/ ?"}
+    Trigger["Trigger: Daily at 04:17 UTC or workflow_dispatch"] --> Discovery{"Discovery: Pending challenge in challenges/ ?"}
 
     Discovery -- Yes --> SelectPending["Select earliest eligible pending challenge"]
     Discovery -- No --> FetchNext["Auto-Fetch next sequential problem (001, 002, ...) via LeetCode GraphQL"]
@@ -97,20 +97,20 @@ sequenceDiagram
 7. **Coverage & SonarQube Cloud:** Test coverage is generated via `cargo-llvm-cov` producing an LCOV report (`lcov.info`) ingested by SonarQube Cloud with `sonar.qualitygate.wait=true`.
 8. **Atomic Progress Advancement:** The progress tracker (`state/progress.json`) is updated only after all gates pass and publication succeeds. Failed runs leave the problem uncompleted so they remain safely retryable.
 
+Publication stages the original selected manifest under `challenges/`, its cached body when present, the solution, and the assessment. The hydrated `.pipeline/selected-challenge.json` is temporary input for assessment and generation and remains ignored by Git.
+
 ---
 
 ## Scheduling & Delivery Diagnostics
 
-Scheduled runs use GitHub Actions' minimum supported interval:
+Scheduled runs request one daily execution:
 ```yaml
 schedule:
-  # Every five minutes at :00, :05, :10, ..., :55 UTC.
-  - cron: "*/5 * * * *"
+  # Daily at 04:17 UTC (01:17 in São Paulo).
+  - cron: "17 4 * * *"
 ```
 
-This requests a run at minutes 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, and 55 of every hour. Scheduled runs publish verified solutions; manual runs default to `dry-run`. The `leetcode-solver` concurrency group prevents overlapping solver jobs and keeps the active run running when another trigger arrives. GitHub keeps at most one pending run in the group, replacing an older pending run when a newer one arrives.
-
-The five-minute interval is used while debugging delivery. After a scheduled run successfully generates, validates, and publishes a Gemini solution, restore the original daily cron `17 4 * * *` (04:17 UTC, 01:17 in São Paulo) and update these scheduling examples. A manual dry run alone does not meet that restoration condition.
+Scheduled runs publish verified solutions; manual runs default to `dry-run`. The `leetcode-solver` concurrency group prevents overlapping solver jobs and keeps the active run running when another trigger arrives. GitHub keeps at most one pending run in the group, replacing an older pending run when a newer one arrives.
 
 The solver was moved from `solve.yml` to `leetcode-solver.yml` to create a fresh GitHub workflow registration while diagnosing missing schedule events. The workflow contents and solver behavior are unchanged. Registration alone does not verify schedule delivery.
 
@@ -129,7 +129,7 @@ gh workflow disable leetcode-solver.yml
 gh workflow enable leetcode-solver.yml
 ```
 
-The schedule requests up to 288 runs per day. Generation, repairs, retries, and model fallbacks can consume multiple API requests per run; actual free-tier availability depends on the configured models and account quota.
+The schedule requests one run per day. Generation, repairs, retries, and model fallbacks can consume multiple API requests per run; actual free-tier availability depends on the configured models and account quota.
 
 ---
 
@@ -187,7 +187,7 @@ When updating to a newer Flash model:
 ├── .github/
 │   └── workflows/
 │       ├── build.yml          # CI: Rust checks, LCOV coverage, and SonarQube Cloud scan
-│       └── leetcode-solver.yml          # Five-minute solver, validation, and publication
+│       └── leetcode-solver.yml          # Daily solver, validation, and publication
 ├── challenges/
 │   ├── README.md              # Challenge manifest schema and rules
 │   ├── bodies/                # Hydrated problem descriptions, examples, constraints

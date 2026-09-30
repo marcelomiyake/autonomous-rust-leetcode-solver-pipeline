@@ -4,7 +4,7 @@ These instructions apply to the entire repository. Read `README.md` before chang
 
 ## Project state
 
-- The repository now has a minimal Rust library crate, an authorized challenge inbox, a Gemini candidate solver, a merge-gated progress store, and five-minute/manual GitHub workflows. It still has no problem solutions until a maintainer supplies an authorized challenge input.
+- The repository now has a minimal Rust library crate, an authorized challenge inbox, a Gemini candidate solver, a merge-gated progress store, and daily/manual GitHub workflows. It still has no problem solutions until a maintainer supplies an authorized challenge input.
 - `.github/workflows/build.yml` runs a SonarCloud scan on pushes to `main` and on pull requests. `sonar-project.properties` contains the project key `marcelomiyake_autonomous-rust-leetcode-solver-pipeline` and organization `marcelomiyake`.
 - Treat the authorized challenge contents and generated solutions as data that still require maintainer review. Update the README when implementation changes the pipeline or the repository's status.
 - Each authorized challenge records the human `leetcode_difficulty`; the solver runs a separate TypeSafe Jev Score assessment and publishes the structured result under `state/assessments/` with the solution pull request.
@@ -21,7 +21,7 @@ These instructions apply to the entire repository. Read `README.md` before chang
 - Treat generated source as a candidate. Parse and validate it, limit repair attempts, and never mark or publish it as solved after a failed check.
 - Advance progress state only after publication succeeds so a failed run remains retryable. Avoid committing secrets, tokens, or generated coverage files.
 - Keep `GEMINI_API_KEY`, `TYPESAFE_API_KEY`, and `SONAR_TOKEN` in GitHub Actions secrets only. Generated code must be compiled without those secrets or persisted checkout credentials in its environment. Expose `TYPESAFE_API_KEY` only to the Jev assessment step, never to Gemini or Rust validation.
-- During schedule-delivery debugging, keep the solver schedule at `*/5 * * * *` (minutes 0, 5, 10, ..., 55). After a scheduled run successfully generates, validates, and publishes a Gemini solution, restore the original daily schedule `17 4 * * *` (04:17 UTC, 01:17 in São Paulo). Use `workflow_dispatch` for immediate development runs. Preserve the shared concurrency group so scheduled and manual runs cannot publish simultaneously.
+- Keep the solver on the daily schedule `17 4 * * *` (04:17 UTC, 01:17 in São Paulo). Use `workflow_dispatch` for immediate development runs. Preserve the shared concurrency group so scheduled and manual runs cannot publish simultaneously.
 - Preserve the existing SonarCloud project identity when changing scanner configuration. Align `sonar.rust.lcov.reportPaths` with the path actually produced by `cargo-llvm-cov`; configure coverage thresholds and Quality Gate conditions explicitly if they become requirements.
 
 ## Model maintenance for Gemini free tier
