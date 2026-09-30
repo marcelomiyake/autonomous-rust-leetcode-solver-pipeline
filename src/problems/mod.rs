@@ -2,3 +2,6 @@
 
 #[path = "001_two_sum.rs"]
 pub mod _001_two_sum;
+
+#[path = "002_add_two_numbers.rs"]
+pub mod _002_add_two_numbers;

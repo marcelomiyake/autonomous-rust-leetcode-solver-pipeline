@@ -1,0 +1,15 @@
+{
+  "id": "002-add-two-numbers",
+  "title": "Add Two Numbers",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-09-30",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/add-two-numbers/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-09-30",
+  "rust_signature": "pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/002-add-two-numbers.json"
+  }
+}
