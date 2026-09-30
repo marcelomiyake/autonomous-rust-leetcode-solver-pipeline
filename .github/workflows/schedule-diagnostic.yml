@@ -1,0 +1,23 @@
+name: Schedule delivery diagnostic
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  observe:
+    if: github.repository == 'marcelomiyake/autonomous-rust-leetcode-solver-pipeline'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      TRIGGER_EVENT: ${{ github.event_name }}
+      TRIGGER_SCHEDULE: ${{ github.event.schedule }}
+    steps:
+      - name: Record delivered trigger
+        run: |
+          printf 'event=%s schedule=%s run=%s ref=%s sha=%s\n' \
+            "$TRIGGER_EVENT" "$TRIGGER_SCHEDULE" "$GITHUB_RUN_ID" "$GITHUB_REF" "$GITHUB_SHA"
+          date --utc --iso-8601=seconds
