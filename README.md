@@ -112,19 +112,21 @@ This requests a run at minutes 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, and 55 
 
 The five-minute interval is used while debugging delivery. After a scheduled run successfully generates, validates, and publishes a Gemini solution, restore the original daily cron `17 4 * * *` (04:17 UTC, 01:17 in São Paulo) and update these scheduling examples. A manual dry run alone does not meet that restoration condition.
 
+The solver was moved from `solve.yml` to `leetcode-solver.yml` to create a fresh GitHub workflow registration while diagnosing missing schedule events. The workflow contents and solver behavior are unchanged. Registration alone does not verify schedule delivery.
+
 GitHub schedules are best effort: delivery can be delayed or dropped. The workflow must be enabled and present on the default branch (`main`). To diagnose delivery, inspect scheduled events separately from manual runs:
 
 ```sh
-gh workflow view solve.yml
-gh run list --workflow solve.yml --event schedule --limit 10
-gh workflow run solve.yml --ref main -f mode=dry-run
+gh workflow view leetcode-solver.yml
+gh run list --workflow leetcode-solver.yml --event schedule --limit 10
+gh workflow run leetcode-solver.yml --ref main -f mode=dry-run
 ```
 
 A successful manual run verifies execution, but does not prove cron delivery. If no scheduled events appear, disable and re-enable the workflow to refresh its enabled state, then observe the scheduled-run history:
 
 ```sh
-gh workflow disable solve.yml
-gh workflow enable solve.yml
+gh workflow disable leetcode-solver.yml
+gh workflow enable leetcode-solver.yml
 ```
 
 The schedule requests up to 288 runs per day. Generation, repairs, retries, and model fallbacks can consume multiple API requests per run; actual free-tier availability depends on the configured models and account quota.
@@ -166,7 +168,7 @@ When updating to a newer Flash model:
    - Update `DEFAULT_MODEL` (e.g., `"gemini-3.8-flash"`).
    - Update `DEFAULT_FALLBACK_MODEL` (e.g., `"gemini-3.7-flash"`).
    - Update the fallback tuple in `call_gemini()`.
-2. **Update `.github/workflows/solve.yml`:**
+2. **Update `.github/workflows/leetcode-solver.yml`:**
    - Update `DEFAULT_MODEL` / `GEMINI_MODEL` and `GEMINI_FALLBACK_MODEL` environment variables.
 3. **Run Verification:**
    ```sh
@@ -185,7 +187,7 @@ When updating to a newer Flash model:
 ├── .github/
 │   └── workflows/
 │       ├── build.yml          # CI: Rust checks, LCOV coverage, and SonarQube Cloud scan
-│       └── solve.yml          # Five-minute solver, validation, and publication
+│       └── leetcode-solver.yml          # Five-minute solver, validation, and publication
 ├── challenges/
 │   ├── README.md              # Challenge manifest schema and rules
 │   ├── bodies/                # Hydrated problem descriptions, examples, constraints

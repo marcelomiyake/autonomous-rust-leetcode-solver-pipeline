@@ -30,7 +30,7 @@ These instructions apply to the entire repository. Read `README.md` before chang
 - If candidate generation fails with HTTP 404 (model not found) or unsupported model errors:
   1. Inspect active models on the API key using `python3 scripts/solver_pipeline.py check-models` or `GET https://generativelanguage.googleapis.com/v1beta/models?key=$GEMINI_API_KEY`.
   2. Confirm the selected replacement belongs to the Flash model family (`gemini-*-flash`) to maintain free-tier quota eligibility (typically 10–15 RPM and 500–1,500 RPD).
-  3. Update `DEFAULT_MODEL`, `DEFAULT_FALLBACK_MODEL`, and the fallback chain in `scripts/solver_pipeline.py` and `.github/workflows/solve.yml`.
+  3. Update `DEFAULT_MODEL`, `DEFAULT_FALLBACK_MODEL`, and the fallback chain in `scripts/solver_pipeline.py` and `.github/workflows/leetcode-solver.yml`.
   4. Ensure the selected model supports structured JSON output and thinking budget configuration.
 
 ## Verification
