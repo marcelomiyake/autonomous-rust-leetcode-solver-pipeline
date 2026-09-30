@@ -1,4 +1,10 @@
 {
-  "completed": [],
-  "updated_at": null
+  "completed": [
+    {
+      "id": "001-two-sum",
+      "published_at": "2026-09-30T13:08:49Z",
+      "commit": "daf720508fbd0e67f2fdf62efcd02a6d0f82c253"
+    }
+  ],
+  "updated_at": "2026-09-30T13:08:49Z"
 }
