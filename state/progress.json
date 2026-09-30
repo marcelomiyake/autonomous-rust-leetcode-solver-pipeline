@@ -4,7 +4,12 @@
       "id": "001-two-sum",
       "published_at": "2026-09-30T13:08:49Z",
       "commit": "daf720508fbd0e67f2fdf62efcd02a6d0f82c253"
+    },
+    {
+      "id": "002-add-two-numbers",
+      "published_at": "2026-09-30T13:15:05Z",
+      "commit": "9a0bc5d34c9540c6e6201d008d3fe81ea040ae7a"
     }
   ],
-  "updated_at": "2026-09-30T13:08:49Z"
+  "updated_at": "2026-09-30T13:15:05Z"
 }
