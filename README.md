@@ -9,11 +9,11 @@ An autonomous, guarded pipeline that sequentially discovers LeetCode problems, c
 
 ## Architecture & Workflow
 
-The pipeline runs on a daily schedule and can also be triggered manually via `workflow_dispatch`. It handles everything from problem discovery to atomic repository updates without manual intervention.
+The pipeline runs every five minutes and can also be triggered manually via `workflow_dispatch`. It handles everything from problem discovery to atomic repository updates without manual intervention.
 
 ```mermaid
 flowchart TD
-    Trigger["Trigger: Daily Cron (04:17 UTC) or workflow_dispatch"] --> Discovery{"Discovery: Pending challenge in challenges/ ?"}
+    Trigger["Trigger: Every five minutes or workflow_dispatch"] --> Discovery{"Discovery: Pending challenge in challenges/ ?"}
 
     Discovery -- Yes --> SelectPending["Select earliest eligible pending challenge"]
     Discovery -- No --> FetchNext["Auto-Fetch next sequential problem (001, 002, ...) via LeetCode GraphQL"]
@@ -99,20 +99,33 @@ sequenceDiagram
 
 ---
 
-## Scheduling & Free Tier Capacity Optimization
+## Scheduling & Delivery Diagnostics
 
-Scheduled runs trigger daily via GitHub Actions:
+Scheduled runs use GitHub Actions' minimum supported interval:
 ```yaml
 schedule:
-  # Daily at 04:17 UTC (01:17 BRT). Off-peak window for Gemini free tier capacity.
-  - cron: "17 4 * * *"
+  # Every five minutes at :00, :05, :10, ..., :55 UTC.
+  - cron: "*/5 * * * *"
 ```
 
-### Why 04:17 UTC?
+This requests a run at minutes 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, and 55 of every hour. Scheduled runs publish verified solutions; manual runs default to `dry-run`. The `leetcode-solver` concurrency group prevents overlapping solver jobs and keeps the active run running when another trigger arrives. GitHub keeps at most one pending run in the group, replacing an older pending run when a newer one arrives.
 
-* **Lowest Global Concurrency:** Global API traffic to Google AI Studio peaks between 13:00 and 21:00 UTC during the overlap of US and European business hours. Free-tier capacity is dynamic and best-effort; global traffic spikes trigger temporary HTTP 503 (`UNAVAILABLE`) errors. The 02:00–07:00 UTC window represents the global trough (late night in the Americas, early morning in Europe).
-* **Minimal Runner Queueing:** Triggering at an irregular minute (`:17`) avoids the traffic spikes associated with jobs scheduled on the hour (`:00`) or half-hour (`:30`).
-* **Free-Tier Footprint:** Each daily run consumes at most 1–3 requests, using less than 0.3% of the daily free-tier request quota (500–1,500 RPD).
+GitHub schedules are best effort: delivery can be delayed or dropped. The workflow must be enabled and present on the default branch (`main`). To diagnose delivery, inspect scheduled events separately from manual runs:
+
+```sh
+gh workflow view solve.yml
+gh run list --workflow solve.yml --event schedule --limit 10
+gh workflow run solve.yml --ref main -f mode=dry-run
+```
+
+A successful manual run verifies execution, but does not prove cron delivery. If no scheduled events appear, disable and re-enable the workflow to refresh its enabled state, then observe the scheduled-run history:
+
+```sh
+gh workflow disable solve.yml
+gh workflow enable solve.yml
+```
+
+The schedule requests up to 288 runs per day. Generation, repairs, retries, and model fallbacks can consume multiple API requests per run; actual free-tier availability depends on the configured models and account quota.
 
 ---
 
@@ -170,7 +183,7 @@ When updating to a newer Flash model:
 ├── .github/
 │   └── workflows/
 │       ├── build.yml          # CI: Rust checks, LCOV coverage, and SonarQube Cloud scan
-│       └── solve.yml          # Scheduled daily solver, validation, and publication
+│       └── solve.yml          # Five-minute solver, validation, and publication
 ├── challenges/
 │   ├── README.md              # Challenge manifest schema and rules
 │   ├── bodies/                # Hydrated problem descriptions, examples, constraints

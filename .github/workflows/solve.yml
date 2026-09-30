@@ -17,8 +17,8 @@ on:
           - publish
         default: dry-run
   schedule:
-    # Daily at 04:17 UTC (01:17 BRT). Off-peak window for Gemini free tier capacity.
-    - cron: "17 4 * * *"
+    # Every five minutes at :00, :05, :10, ..., :55 UTC.
+    - cron: "*/5 * * * *"
 
 concurrency:
   group: leetcode-solver
@@ -246,4 +246,3 @@ jobs:
           done
           echo "Could not publish directly to main after three attempts." >&2
           exit 1
-
