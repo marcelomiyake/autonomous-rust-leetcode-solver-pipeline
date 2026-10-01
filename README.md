@@ -9,11 +9,11 @@ An autonomous, guarded pipeline that sequentially discovers LeetCode problems, c
 
 ## Architecture & Workflow
 
-The pipeline runs daily at 04:17 UTC (01:17 in São Paulo) and can also be triggered manually via `workflow_dispatch`. It handles everything from problem discovery to atomic repository updates without manual intervention.
+The pipeline is dispatched by cron-job.org daily at 04:17 UTC (01:17 in São Paulo) through GitHub `workflow_dispatch`. A yearly GitHub schedule remains as a fallback, and maintainers can trigger runs manually. The workflow handles everything from problem discovery to atomic repository updates without manual intervention.
 
 ```mermaid
 flowchart TD
-    Trigger["Trigger: Daily at 04:17 UTC or workflow_dispatch"] --> Discovery{"Discovery: Pending challenge in challenges/ ?"}
+    Trigger["Trigger: cron-job.org daily at 04:17 UTC, annual GitHub fallback, or manual dispatch"] --> Discovery{"Discovery: Pending challenge in challenges/ ?"}
 
     Discovery -- Yes --> SelectPending["Select earliest eligible pending challenge"]
     Discovery -- No --> FetchNext["Auto-Fetch next sequential problem (001, 002, ...) via LeetCode GraphQL"]
@@ -103,33 +103,28 @@ Publication stages the original selected manifest under `challenges/`, its cache
 
 ## Scheduling & Delivery Diagnostics
 
-Scheduled runs request one daily execution:
-```yaml
-schedule:
-  # Daily at 04:17 UTC (01:17 in São Paulo).
-  - cron: "17 4 * * *"
-```
+GitHub Actions schedule delivery has been unreliable for this repository. cron-job.org is the primary daily trigger: it sends an authenticated `POST` request to GitHub's `workflow_dispatch` endpoint at 04:17 UTC (01:17 in São Paulo), with `ref: main` and `mode: publish`. The job uses a fine-grained GitHub token with Actions write permission for this repository, stored only in cron-job.org's request headers. Never put the token in this repository, workflow YAML, documentation, or a URL.
 
-Scheduled runs publish verified solutions; manual runs default to `dry-run`. The `leetcode-solver` concurrency group prevents overlapping solver jobs and keeps the active run running when another trigger arrives. GitHub keeps at most one pending run in the group, replacing an older pending run when a newer one arrives.
+The workflow retains a yearly schedule (`0 0 1 1 *`) as a low-frequency fallback and supports manual dispatch. The yearly fallback is not the daily scheduler. Scheduled and manual publishing share the `leetcode-solver` concurrency group, which prevents simultaneous publication.
 
-The solver was moved from `solve.yml` to `leetcode-solver.yml` to create a fresh GitHub workflow registration while diagnosing missing schedule events. The workflow contents and solver behavior are unchanged. Registration alone does not verify schedule delivery.
+To configure cron-job.org, create a POST job with these settings:
 
-GitHub schedules are best effort: delivery can be delayed or dropped. The workflow must be enabled and present on the default branch (`main`). To diagnose delivery, inspect scheduled events separately from manual runs:
+- URL: `https://api.github.com/repos/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/actions/workflows/leetcode-solver.yml/dispatches`
+- Request body: `{"ref":"main","inputs":{"mode":"publish"}}`
+- Headers: `Accept: application/vnd.github+json`, `X-GitHub-Api-Version: 2022-11-28`, and `Authorization: Bearer <GitHub token>`
+- Start with a 7-minute interval to verify dispatch, then schedule the job for 01:17 daily in the `America/Sao_Paulo` timezone (04:17 UTC; `17 1 * * *` in that timezone).
+
+Cron-job.org treats a successful GitHub dispatch response (`204 No Content`) as a successful request. Check the job history and GitHub Actions run history to diagnose delivery:
 
 ```sh
 gh workflow view leetcode-solver.yml
-gh run list --workflow leetcode-solver.yml --event schedule --limit 10
+gh run list --workflow leetcode-solver.yml --event workflow_dispatch --limit 10
 gh workflow run leetcode-solver.yml --ref main -f mode=dry-run
 ```
 
-A successful manual run verifies execution, but does not prove cron delivery. If no scheduled events appear, disable and re-enable the workflow to refresh its enabled state, then observe the scheduled-run history:
+The annual GitHub event appears separately as `schedule`; cron-job.org runs appear as `workflow_dispatch`. A manual dry run confirms workflow execution but does not verify the external cron job. The workflow must remain enabled and on the default branch (`main`).
 
-```sh
-gh workflow disable leetcode-solver.yml
-gh workflow enable leetcode-solver.yml
-```
-
-The schedule requests one run per day. Generation, repairs, retries, and model fallbacks can consume multiple API requests per run; actual free-tier availability depends on the configured models and account quota.
+Each daily dispatch requests one run. Generation, repairs, retries, and model fallbacks can consume multiple API requests per run; actual free-tier availability depends on the configured models and account quota.
 
 ---
 
@@ -186,8 +181,8 @@ When updating to a newer Flash model:
 .
 ├── .github/
 │   └── workflows/
-│       ├── build.yml          # CI: Rust checks, LCOV coverage, and SonarQube Cloud scan
-│       └── leetcode-solver.yml          # Daily solver, validation, and publication
+│       ├── build.yml                 # CI: Rust checks, LCOV coverage, and SonarQube Cloud scan
+│       └── leetcode-solver.yml       # Dispatchable solver, validation, and publication
 ├── challenges/
 │   ├── README.md              # Challenge manifest schema and rules
 │   ├── bodies/                # Hydrated problem descriptions, examples, constraints
@@ -221,6 +216,7 @@ When updating to a newer Flash model:
 | `GEMINI_API_KEY` | Google AI Studio | Candidate generation and repair | Provided only to Python solver step; stripped from compiler/test environments. |
 | `TYPESAFE_API_KEY` | TypeSafe AI | Jev difficulty assessment | Provided only to Jev assessment step; never exposed to Gemini or compiler. |
 | `SONAR_TOKEN` | SonarQube Cloud | Quality Gate analysis | Used exclusively by SonarQube Cloud GitHub Action step. |
+| Fine-grained GitHub token | GitHub / cron-job.org | Dispatch `leetcode-solver.yml` | Limit to this repository and Actions: write; store only in cron-job.org's `Authorization` header. |
 
 ---
 

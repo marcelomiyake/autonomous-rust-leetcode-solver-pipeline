@@ -17,8 +17,8 @@ on:
           - publish
         default: dry-run
   schedule:
-    # Daily at 04:17 UTC (01:17 in São Paulo).
-    - cron: "17 4 * * *"
+    # Annual fallback; cron-job.org dispatches the daily run at 04:17 UTC.
+    - cron: "0 0 1 1 *"
 
 concurrency:
   group: leetcode-solver
