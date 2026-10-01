@@ -1,0 +1,21 @@
+{
+  "description": "Given a string s, find the length of the longest substring without duplicate characters.",
+  "constraints": [
+    "0 <= s.length <= 105",
+    "s consists of English letters, digits, symbols and spaces."
+  ],
+  "examples": [
+    {
+      "input": "s = \"abcabcbb\"",
+      "output": "3"
+    },
+    {
+      "input": "s = \"bbbbb\"",
+      "output": "1"
+    },
+    {
+      "input": "s = \"pwwkew\"",
+      "output": "3"
+    }
+  ]
+}
