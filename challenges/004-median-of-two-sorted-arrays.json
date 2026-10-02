@@ -1,0 +1,15 @@
+{
+  "id": "004-median-of-two-sorted-arrays",
+  "title": "Median of Two Sorted Arrays",
+  "leetcode_difficulty": "hard",
+  "challenge_date": "2026-10-02",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/median-of-two-sorted-arrays/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-02",
+  "rust_signature": "pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/004-median-of-two-sorted-arrays.json"
+  }
+}

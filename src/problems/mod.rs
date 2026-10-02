@@ -8,3 +8,6 @@ pub mod _002_add_two_numbers;
 
 #[path = "003_longest_substring_without_repeating_characters.rs"]
 pub mod _003_longest_substring_without_repeating_characters;
+
+#[path = "004_median_of_two_sorted_arrays.rs"]
+pub mod _004_median_of_two_sorted_arrays;
