@@ -1,0 +1,17 @@
+{
+  "description": "Given a string s, return the longest palindromic substring in s.",
+  "constraints": [
+    "1 <= s.length <= 1000",
+    "s consist of only digits and English letters."
+  ],
+  "examples": [
+    {
+      "input": "s = \"babad\"",
+      "output": "\"bab\""
+    },
+    {
+      "input": "s = \"cbbd\"",
+      "output": "\"bb\""
+    }
+  ]
+}

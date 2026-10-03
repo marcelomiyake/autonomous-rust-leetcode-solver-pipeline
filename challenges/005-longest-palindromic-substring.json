@@ -1,0 +1,15 @@
+{
+  "id": "005-longest-palindromic-substring",
+  "title": "Longest Palindromic Substring",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-03",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/longest-palindromic-substring/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-03",
+  "rust_signature": "pub fn longest_palindrome(s: String) -> String",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/005-longest-palindromic-substring.json"
+  }
+}
