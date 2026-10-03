@@ -19,7 +19,12 @@
       "id": "004-median-of-two-sorted-arrays",
       "published_at": "2026-10-02T04:19:53Z",
       "commit": "c56d034f004fda99dc417fecdc20a23974a3fdc3"
+    },
+    {
+      "id": "005-longest-palindromic-substring",
+      "published_at": "2026-10-03T04:19:33Z",
+      "commit": "23ae6123ee9319a7f44cdab040eafd72d3b48211"
     }
   ],
-  "updated_at": "2026-10-02T04:19:53Z"
+  "updated_at": "2026-10-03T04:19:33Z"
 }
