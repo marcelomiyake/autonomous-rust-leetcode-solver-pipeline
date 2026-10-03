@@ -17,7 +17,7 @@ These instructions apply to the entire repository. Read `README.md` before chang
 
 ## Implementation guidance
 
-- Keep each solution in a focused Rust module with tests for examples, edge cases, and relevant constraints. Put shared types in `src/common/` only when they are genuinely shared.
+- Keep each solution in a focused Rust module with tests for examples, edge cases, and relevant constraints. Put the LeetCode entry-point method inside `impl Solution { ... }`, declare a module-local `pub struct Solution;` for local compilation, and keep the manifest's `rust_signature` as the method signature without the enclosing `impl`. Put shared types in `src/common/` only when they are genuinely shared.
 - Treat generated source as a candidate. Parse and validate it, limit repair attempts, and never mark or publish it as solved after a failed check.
 - Advance progress state only after publication succeeds so a failed run remains retryable. Avoid committing secrets, tokens, or generated coverage files.
 - Keep `GEMINI_API_KEY`, `TYPESAFE_API_KEY`, and `SONAR_TOKEN` in GitHub Actions secrets only. Generated code must be compiled without those secrets or persisted checkout credentials in its environment. Expose `TYPESAFE_API_KEY` only to the Jev assessment step, never to Gemini or Rust validation.

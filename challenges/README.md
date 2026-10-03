@@ -32,6 +32,11 @@ and `examples`. Use `local-json` for a maintainer-supplied file or
 only after selection, never while the scheduler scans metadata. A body source
 may repeat `rust_signature`, but it must exactly match the manifest signature.
 
+Record `rust_signature` as the LeetCode method signature, without an enclosing
+`impl`. In the generated module, declare `pub struct Solution;` and place that
+entry-point method inside `impl Solution { ... }`. Keep helper types and
+`#[cfg(test)]` tests at module scope as needed.
+
 `leetcode_difficulty` is the human-facing LeetCode label (`easy`, `medium`, or
 `hard`). Before Gemini generates code, the workflow sends the authorized input
 to TypeSafe's Jev model and stores a separate structured assessment in

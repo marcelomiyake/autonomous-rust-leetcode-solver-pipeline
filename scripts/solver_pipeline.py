@@ -783,13 +783,16 @@ def prompt_for(challenge: dict[str, Any], current_source: str | None = None, dia
     if current_source is None:
         task = (
             "Generate a correct Rust module body for this problem. Implement the exact Rust signature, "
-            "include focused #[cfg(test)] tests for the examples, edge cases, and relevant constraints, "
-            "and use only the Rust standard library."
+            "put the entry-point method inside `impl Solution`, and include a module-local `pub struct Solution;` "
+            "so the module compiles independently. Call it as `Solution::method` in focused #[cfg(test)] tests "
+            "for examples, edge cases, and relevant constraints, and use only the Rust standard library."
         )
     else:
         task = (
             "Repair the Rust module body below using the compiler/test diagnostics. Keep the exact public "
-            "signature and improve the tests when useful. Return the complete replacement module body."
+            "signature, keep its entry-point method inside `impl Solution`, keep the module-local `pub struct Solution;`, "
+            "call it as `Solution::method` in the tests, and improve the tests when useful. Return the complete "
+            "replacement module body."
         )
     prompt = f"""You are the candidate-generation component of a Rust solution pipeline.
 
@@ -1170,6 +1173,112 @@ def parse_model_json(text: str) -> dict[str, Any]:
     return value
 
 
+def _mask_rust_non_code(source: str) -> str:
+    """Blank comments and literals while preserving offsets and line breaks."""
+    masked = list(source)
+
+    def blank(start: int, end: int) -> None:
+        for offset in range(start, end):
+            if masked[offset] not in "\r\n":
+                masked[offset] = " "
+
+    index = 0
+    while index < len(source):
+        if source.startswith("//", index):
+            end = source.find("\n", index)
+            end = len(source) if end < 0 else end
+            blank(index, end)
+            index = end
+            continue
+
+        if source.startswith("/*", index):
+            end = index + 2
+            depth = 1
+            while end < len(source) and depth:
+                if source.startswith("/*", end):
+                    depth += 1
+                    end += 2
+                elif source.startswith("*/", end):
+                    depth -= 1
+                    end += 2
+                else:
+                    end += 1
+            blank(index, end)
+            index = end
+            continue
+
+        raw_string = re.match(r'(?:b)?r(#+)?"', source[index:])
+        if raw_string:
+            hashes = raw_string.group(1) or ""
+            terminator = '"' + hashes
+            closing = source.find(terminator, index + raw_string.end())
+            end = len(source) if closing < 0 else closing + len(terminator)
+            blank(index, end)
+            index = end
+            continue
+
+        if source[index] == '"':
+            end = index + 1
+            while end < len(source):
+                if source[end] == "\\":
+                    end += 2
+                elif source[end] == '"':
+                    end += 1
+                    break
+                else:
+                    end += 1
+            blank(index, end)
+            index = end
+            continue
+
+        if source[index] == "'":
+            end = index + 1
+            if end < len(source) and source[end] == "\\":
+                end += 1
+                if end < len(source) and source[end] == "u" and source[end + 1 : end + 2] == "{":
+                    closing_brace = source.find("}", end + 2)
+                    end = len(source) if closing_brace < 0 else closing_brace + 1
+                else:
+                    end += 1
+            elif end < len(source) and source[end] not in "\r\n'\\":
+                end += 1
+            else:
+                index += 1
+                continue
+
+            if end < len(source) and source[end] == "'":
+                end += 1
+                blank(index, end)
+                index = end
+                continue
+
+        index += 1
+
+    return "".join(masked)
+
+
+def _has_method_in_solution_impl(source: str, function_name: str) -> bool:
+    masked = _mask_rust_non_code(source)
+    impl_pattern = re.compile(r"\bimpl\s+Solution\s*\{")
+    method_pattern = re.compile(rf"\bfn\s+{re.escape(function_name)}\b\s*(?:<[^;{{}}]*>)?\s*\(")
+
+    for impl_match in impl_pattern.finditer(masked):
+        opening_brace = impl_match.end() - 1
+        depth = 1
+        closing_brace = opening_brace + 1
+        while closing_brace < len(masked) and depth:
+            if masked[closing_brace] == "{":
+                depth += 1
+            elif masked[closing_brace] == "}":
+                depth -= 1
+            closing_brace += 1
+
+        if depth == 0 and method_pattern.search(masked, opening_brace + 1, closing_brace - 1):
+            return True
+
+    return False
+
+
 def validate_model_output(value: dict[str, Any], signature: str | None = None) -> None:
     source = value.get("rust_source")
     if not isinstance(source, str) or not source.strip():
@@ -1183,10 +1292,15 @@ def validate_model_output(value: dict[str, Any], signature: str | None = None) -
             raise PipelineError(f"Gemini source candidate contains forbidden construct: {pattern.pattern}")
     if "#[cfg(test)]" not in source:
         raise PipelineError("Gemini source candidate must include cfg(test) tests")
+    masked_source = _mask_rust_non_code(source)
+    if not re.search(r"\bstruct\s+Solution\b", masked_source):
+        raise PipelineError("Gemini source candidate must define Solution for its module")
     if signature:
         match = re.search(r"\bfn\s+([A-Za-z_][A-Za-z0-9_]*)", signature)
-        if match and not re.search(rf"\b{re.escape(match.group(1))}\b", source):
-            raise PipelineError(f"Gemini source candidate does not contain function {match.group(1)}")
+        if match and not _has_method_in_solution_impl(source, match.group(1)):
+            raise PipelineError(
+                f"Gemini source candidate must define function {match.group(1)} inside impl Solution"
+            )
 
 
 def run_state_path(root: Path, problem_id: str) -> Path:

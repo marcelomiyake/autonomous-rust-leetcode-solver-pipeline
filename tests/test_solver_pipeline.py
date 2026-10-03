@@ -19,6 +19,7 @@ from scripts.solver_pipeline import (
     parse_leetcode_content,
     parse_model_json,
     parse_jev_response,
+    prompt_for,
     remove_metadata_header,
     solution_file_name,
     validate_model_output,
@@ -168,17 +169,35 @@ class SolverPipelineTests(unittest.TestCase):
         self.assertEqual(parse_model_json('```json\n{"rust_source":"x"}\n```')["rust_source"], "x")
 
     def test_validate_model_output_requires_tests_and_signature(self) -> None:
-        source = """pub fn solve(value: i32) -> i32 { value }
+        source = """pub struct Solution;
+
+impl Solution {
+    pub fn solve(value: i32) -> i32 { value }
+}
 
 #[cfg(test)]
 mod tests {
+    use super::Solution;
+
     #[test]
-    fn example() { assert_eq!(super::solve(1), 1); }
+    fn example() { assert_eq!(Solution::solve(1), 1); }
 }
 """
         validate_model_output({"rust_source": source}, VALID_CHALLENGE["rust_signature"])
         with self.assertRaisesRegex(RuntimeError, "forbidden"):
             validate_model_output({"rust_source": source.replace("value }", "unsafe { value }", 1)})
+        standalone = source.replace(
+            "impl Solution {\n    pub fn solve(value: i32) -> i32 { value }\n}",
+            "pub fn solve(value: i32) -> i32 { value }",
+        )
+        with self.assertRaisesRegex(RuntimeError, "inside impl Solution"):
+            validate_model_output({"rust_source": standalone}, VALID_CHALLENGE["rust_signature"])
+
+    def test_prompt_requires_leetcode_solution_impl(self) -> None:
+        prompt = prompt_for(VALID_CHALLENGE)
+        self.assertIn("inside `impl Solution`", prompt)
+        self.assertIn("pub struct Solution;", prompt)
+        self.assertIn("`Solution::method`", prompt)
 
     def test_metadata_round_trip(self) -> None:
         run = {
@@ -218,12 +237,18 @@ mod tests {
                 "id": "001-two-sum",
                 "rust_signature": "pub fn solve(nums: Vec<i32>, target: i32) -> Vec<i32>",
             }
-            source = """pub fn solve(nums: Vec<i32>, target: i32) -> Vec<i32> { vec![] }
+            source = """pub struct Solution;
+
+impl Solution {
+    pub fn solve(nums: Vec<i32>, target: i32) -> Vec<i32> { vec![] }
+}
 
 #[cfg(test)]
 mod tests {
+    use super::Solution;
+
     #[test]
-    fn test_example() { assert_eq!(super::solve(vec![], 0), vec![]); }
+    fn test_example() { assert_eq!(Solution::solve(vec![], 0), vec![]); }
 }
 """
             run = {

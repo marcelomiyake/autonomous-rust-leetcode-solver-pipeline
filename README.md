@@ -96,6 +96,7 @@ sequenceDiagram
 6. **Strict Quality Gates:** Every solution must pass `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy --all-targets --all-features -- -D warnings`.
 7. **Coverage & SonarQube Cloud:** Test coverage is generated via `cargo-llvm-cov` producing an LCOV report (`lcov.info`) ingested by SonarQube Cloud with `sonar.qualitygate.wait=true`.
 8. **Atomic Progress Advancement:** The progress tracker (`state/progress.json`) is updated only after all gates pass and publication succeeds. Failed runs leave the problem uncompleted so they remain safely retryable.
+9. **LeetCode Rust Interface:** Every solution entry point is an associated method inside `impl Solution { ... }`, matching LeetCode's Rust editor. Each standalone module declares its own `pub struct Solution;`; the pipeline prompts for this shape and rejects candidates whose challenge method is outside the implementation block.
 
 Publication stages the original selected manifest under `challenges/`, its cached body when present, the solution, and the assessment. The hydrated `.pipeline/selected-challenge.json` is temporary input for assessment and generation and remains ignored by Git.
 

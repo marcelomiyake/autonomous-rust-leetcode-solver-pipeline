@@ -1,4 +1,4 @@
-//! Add one module per Rust-supported LeetCode problem, with tests beside its solution.
+//! Add one module per Rust-supported LeetCode problem; keep its entry point in `impl Solution` and tests beside it.
 
 #[path = "001_two_sum.rs"]
 pub mod _001_two_sum;
