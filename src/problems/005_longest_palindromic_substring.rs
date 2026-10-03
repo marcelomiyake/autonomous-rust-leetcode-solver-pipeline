@@ -12,41 +12,45 @@
 // Jev AI difficulty: easy (score=1.53/4, confidence=0.55)
 // Jev assessment: state/assessments/005-longest-palindromic-substring.json
 // END GENERATED SOLUTION METADATA
-pub fn longest_palindrome(s: String) -> String {
-    let bytes = s.as_bytes();
-    let n = bytes.len();
-    if n <= 1 {
-        return s;
+pub struct Solution;
+
+impl Solution {
+    pub fn longest_palindrome(s: String) -> String {
+        let bytes = s.as_bytes();
+        let n = bytes.len();
+        if n <= 1 {
+            return s;
+        }
+
+        let mut start = 0;
+        let mut max_len = 1;
+
+        let expand = |mut l: isize, mut r: isize| -> (usize, usize) {
+            while l >= 0 && (r as usize) < n && bytes[l as usize] == bytes[r as usize] {
+                l -= 1;
+                r += 1;
+            }
+            let begin = (l + 1) as usize;
+            let len = (r - l - 1) as usize;
+            (begin, len)
+        };
+
+        for i in 0..n {
+            let (cur_start, cur_len) = expand(i as isize, i as isize);
+            if cur_len > max_len {
+                start = cur_start;
+                max_len = cur_len;
+            }
+
+            let (cur_start, cur_len) = expand(i as isize, (i + 1) as isize);
+            if cur_len > max_len {
+                start = cur_start;
+                max_len = cur_len;
+            }
+        }
+
+        s[start..start + max_len].to_string()
     }
-
-    let mut start = 0;
-    let mut max_len = 1;
-
-    let expand = |mut l: isize, mut r: isize| -> (usize, usize) {
-        while l >= 0 && (r as usize) < n && bytes[l as usize] == bytes[r as usize] {
-            l -= 1;
-            r += 1;
-        }
-        let begin = (l + 1) as usize;
-        let len = (r - l - 1) as usize;
-        (begin, len)
-    };
-
-    for i in 0..n {
-        let (cur_start, cur_len) = expand(i as isize, i as isize);
-        if cur_len > max_len {
-            start = cur_start;
-            max_len = cur_len;
-        }
-
-        let (cur_start, cur_len) = expand(i as isize, (i + 1) as isize);
-        if cur_len > max_len {
-            start = cur_start;
-            max_len = cur_len;
-        }
-    }
-
-    s[start..start + max_len].to_string()
 }
 
 #[cfg(test)]
@@ -55,33 +59,36 @@ mod tests {
 
     #[test]
     fn test_example_1() {
-        let res = longest_palindrome("babad".to_string());
+        let res = Solution::longest_palindrome("babad".to_string());
         assert!(res == "bab" || res == "aba");
     }
 
     #[test]
     fn test_example_2() {
-        assert_eq!(longest_palindrome("cbbd".to_string()), "bb");
+        assert_eq!(Solution::longest_palindrome("cbbd".to_string()), "bb");
     }
 
     #[test]
     fn test_single_char() {
-        assert_eq!(longest_palindrome("a".to_string()), "a");
+        assert_eq!(Solution::longest_palindrome("a".to_string()), "a");
     }
 
     #[test]
     fn test_two_different_chars() {
-        let res = longest_palindrome("ac".to_string());
+        let res = Solution::longest_palindrome("ac".to_string());
         assert_eq!(res.len(), 1);
     }
 
     #[test]
     fn test_all_same() {
-        assert_eq!(longest_palindrome("aaaa".to_string()), "aaaa");
+        assert_eq!(Solution::longest_palindrome("aaaa".to_string()), "aaaa");
     }
 
     #[test]
     fn test_entire_string_palindrome() {
-        assert_eq!(longest_palindrome("racecar".to_string()), "racecar");
+        assert_eq!(
+            Solution::longest_palindrome("racecar".to_string()),
+            "racecar"
+        );
     }
 }
