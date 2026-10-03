@@ -25,33 +25,37 @@ impl ListNode {
     }
 }
 
-pub fn add_two_numbers(
-    mut l1: Option<Box<ListNode>>,
-    mut l2: Option<Box<ListNode>>,
-) -> Option<Box<ListNode>> {
-    let mut dummy_head = ListNode::new(0);
-    let mut tail = &mut dummy_head;
-    let mut carry = 0;
+pub struct Solution;
 
-    while l1.is_some() || l2.is_some() || carry != 0 {
-        let mut sum = carry;
+impl Solution {
+    pub fn add_two_numbers(
+        mut l1: Option<Box<ListNode>>,
+        mut l2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut dummy_head = ListNode::new(0);
+        let mut tail = &mut dummy_head;
+        let mut carry = 0;
 
-        if let Some(node) = l1 {
-            sum += node.val;
-            l1 = node.next;
+        while l1.is_some() || l2.is_some() || carry != 0 {
+            let mut sum = carry;
+
+            if let Some(node) = l1 {
+                sum += node.val;
+                l1 = node.next;
+            }
+
+            if let Some(node) = l2 {
+                sum += node.val;
+                l2 = node.next;
+            }
+
+            carry = sum / 10;
+            tail.next = Some(Box::new(ListNode::new(sum % 10)));
+            tail = tail.next.as_mut().unwrap();
         }
 
-        if let Some(node) = l2 {
-            sum += node.val;
-            l2 = node.next;
-        }
-
-        carry = sum / 10;
-        tail.next = Some(Box::new(ListNode::new(sum % 10)));
-        tail = tail.next.as_mut().unwrap();
+        dummy_head.next
     }
-
-    dummy_head.next
 }
 
 #[cfg(test)]
@@ -81,7 +85,7 @@ mod tests {
     fn test_example_1() {
         let l1 = to_list(&[2, 4, 3]);
         let l2 = to_list(&[5, 6, 4]);
-        let sum = add_two_numbers(l1, l2);
+        let sum = Solution::add_two_numbers(l1, l2);
         assert_eq!(to_vec(sum), vec![7, 0, 8]);
     }
 
@@ -89,7 +93,7 @@ mod tests {
     fn test_example_2() {
         let l1 = to_list(&[0]);
         let l2 = to_list(&[0]);
-        let sum = add_two_numbers(l1, l2);
+        let sum = Solution::add_two_numbers(l1, l2);
         assert_eq!(to_vec(sum), vec![0]);
     }
 
@@ -97,7 +101,7 @@ mod tests {
     fn test_example_3() {
         let l1 = to_list(&[9, 9, 9, 9, 9, 9, 9]);
         let l2 = to_list(&[9, 9, 9, 9]);
-        let sum = add_two_numbers(l1, l2);
+        let sum = Solution::add_two_numbers(l1, l2);
         assert_eq!(to_vec(sum), vec![8, 9, 9, 9, 0, 0, 0, 1]);
     }
 
@@ -105,7 +109,7 @@ mod tests {
     fn test_different_lengths() {
         let l1 = to_list(&[1]);
         let l2 = to_list(&[9, 9]);
-        let sum = add_two_numbers(l1, l2);
+        let sum = Solution::add_two_numbers(l1, l2);
         assert_eq!(to_vec(sum), vec![0, 0, 1]);
     }
 }
