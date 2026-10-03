@@ -7,7 +7,7 @@
   "source_url": "https://leetcode.com/problems/two-sum/description/",
   "rust_supported": true,
   "rust_support_checked_at": "2026-09-29",
-  "rust_signature": "pub fn solve(nums: Vec<i32>, target: i32) -> Vec<i32>",
+  "rust_signature": "pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32>",
   "body_source": {
     "type": "local-json",
     "path": "challenges/bodies/001-two-sum.json"

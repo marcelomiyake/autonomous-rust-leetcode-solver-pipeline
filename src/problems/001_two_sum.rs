@@ -14,16 +14,20 @@
 // END GENERATED SOLUTION METADATA
 use std::collections::HashMap;
 
-pub fn solve(nums: Vec<i32>, target: i32) -> Vec<i32> {
-    let mut map = HashMap::with_capacity(nums.len());
-    for (i, &num) in nums.iter().enumerate() {
-        let complement = target - num;
-        if let Some(&prev_idx) = map.get(&complement) {
-            return vec![prev_idx as i32, i as i32];
+pub struct Solution;
+
+impl Solution {
+    pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let mut map = HashMap::with_capacity(nums.len());
+        for (i, &num) in nums.iter().enumerate() {
+            let complement = target - num;
+            if let Some(&prev_idx) = map.get(&complement) {
+                return vec![prev_idx as i32, i as i32];
+            }
+            map.insert(num, i);
         }
-        map.insert(num, i);
+        vec![]
     }
-    vec![]
 }
 
 #[cfg(test)]
@@ -32,18 +36,18 @@ mod tests {
 
     #[test]
     fn test_examples() {
-        assert_eq!(solve(vec![2, 7, 11, 15], 9), vec![0, 1]);
-        assert_eq!(solve(vec![3, 2, 4], 6), vec![1, 2]);
-        assert_eq!(solve(vec![3, 3], 6), vec![0, 1]);
+        assert_eq!(Solution::two_sum(vec![2, 7, 11, 15], 9), vec![0, 1]);
+        assert_eq!(Solution::two_sum(vec![3, 2, 4], 6), vec![1, 2]);
+        assert_eq!(Solution::two_sum(vec![3, 3], 6), vec![0, 1]);
     }
 
     #[test]
     fn test_negative_numbers() {
-        assert_eq!(solve(vec![-1, -2, -3, -4, -5], -8), vec![2, 4]);
+        assert_eq!(Solution::two_sum(vec![-1, -2, -3, -4, -5], -8), vec![2, 4]);
     }
 
     #[test]
     fn test_zero_target() {
-        assert_eq!(solve(vec![-3, 4, 3, 90], 0), vec![0, 2]);
+        assert_eq!(Solution::two_sum(vec![-3, 4, 3, 90], 0), vec![0, 2]);
     }
 }
