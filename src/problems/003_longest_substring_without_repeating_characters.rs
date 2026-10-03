@@ -14,20 +14,24 @@
 // END GENERATED SOLUTION METADATA
 use std::collections::HashMap;
 
-pub fn length_of_longest_substring(s: String) -> i32 {
-    let mut last_seen = HashMap::new();
-    let mut max_len = 0;
-    let mut start = 0;
+pub struct Solution;
 
-    for (i, c) in s.chars().enumerate() {
-        if let Some(&prev_idx) = last_seen.get(&c) {
-            start = start.max(prev_idx + 1);
+impl Solution {
+    pub fn length_of_longest_substring(s: String) -> i32 {
+        let mut last_seen = HashMap::new();
+        let mut max_len = 0;
+        let mut start = 0;
+
+        for (i, c) in s.chars().enumerate() {
+            if let Some(&prev_idx) = last_seen.get(&c) {
+                start = start.max(prev_idx + 1);
+            }
+            last_seen.insert(c, i);
+            max_len = max_len.max(i - start + 1);
         }
-        last_seen.insert(c, i);
-        max_len = max_len.max(i - start + 1);
-    }
 
-    max_len as i32
+        max_len as i32
+    }
 }
 
 #[cfg(test)]
@@ -36,28 +40,43 @@ mod tests {
 
     #[test]
     fn test_examples() {
-        assert_eq!(length_of_longest_substring("abcabcbb".to_string()), 3);
-        assert_eq!(length_of_longest_substring("bbbbb".to_string()), 1);
-        assert_eq!(length_of_longest_substring("pwwkew".to_string()), 3);
+        assert_eq!(
+            Solution::length_of_longest_substring("abcabcbb".to_string()),
+            3
+        );
+        assert_eq!(
+            Solution::length_of_longest_substring("bbbbb".to_string()),
+            1
+        );
+        assert_eq!(
+            Solution::length_of_longest_substring("pwwkew".to_string()),
+            3
+        );
     }
 
     #[test]
     fn test_empty() {
-        assert_eq!(length_of_longest_substring("".to_string()), 0);
+        assert_eq!(Solution::length_of_longest_substring("".to_string()), 0);
     }
 
     #[test]
     fn test_single_char() {
-        assert_eq!(length_of_longest_substring("a".to_string()), 1);
+        assert_eq!(Solution::length_of_longest_substring("a".to_string()), 1);
     }
 
     #[test]
     fn test_all_unique() {
-        assert_eq!(length_of_longest_substring("abcdef".to_string()), 6);
+        assert_eq!(
+            Solution::length_of_longest_substring("abcdef".to_string()),
+            6
+        );
     }
 
     #[test]
     fn test_space_and_symbols() {
-        assert_eq!(length_of_longest_substring("a b!a c!".to_string()), 5);
+        assert_eq!(
+            Solution::length_of_longest_substring("a b!a c!".to_string()),
+            5
+        );
     }
 }
