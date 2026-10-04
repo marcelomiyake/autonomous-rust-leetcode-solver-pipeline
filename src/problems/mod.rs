@@ -14,3 +14,6 @@ pub mod _004_median_of_two_sorted_arrays;
 
 #[path = "005_longest_palindromic_substring.rs"]
 pub mod _005_longest_palindromic_substring;
+
+#[path = "006_zigzag_conversion.rs"]
+pub mod _006_zigzag_conversion;

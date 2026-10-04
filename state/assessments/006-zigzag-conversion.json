@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "problem_id": "006-zigzag-conversion",
+  "leetcode_difficulty": "medium",
+  "provider": "TypeSafe",
+  "requested_model": "jev-latest",
+  "model": "jev-1.13.0",
+  "question": {
+    "id": "algorithmic_difficulty",
+    "type": "score",
+    "instructions": "From an expert algorithmic programmer's point of view, how difficult is it to produce a correct Rust solution for this problem? Judge only the supplied requirements, constraints, examples, and function signature. Do not write code or an explanation, and do not use the LeetCode difficulty label as evidence.",
+    "levels": [
+      {
+        "index": 0,
+        "name": "very-easy",
+        "description": "Very easy: direct implementation with no meaningful algorithmic choice and only routine edge cases."
+      },
+      {
+        "index": 1,
+        "name": "easy",
+        "description": "Easy: one familiar technique or data structure solves the problem with straightforward reasoning."
+      },
+      {
+        "index": 2,
+        "name": "moderate",
+        "description": "Moderate: requires combining constraints, choosing an appropriate technique, or handling several non-obvious cases."
+      },
+      {
+        "index": 3,
+        "name": "hard",
+        "description": "Hard: requires non-trivial algorithmic insight, careful invariants, or substantial implementation detail."
+      },
+      {
+        "index": 4,
+        "name": "very-hard",
+        "description": "Very hard: demands advanced insight or multiple interacting techniques and is easy to get subtly wrong."
+      }
+    ]
+  },
+  "ai_difficulty": {
+    "score": 1.24,
+    "scale_max": 4,
+    "dominant_level": "easy",
+    "dominant_band": "easy",
+    "confidence": 0.77,
+    "probabilities": {
+      "0": 0.01,
+      "1": 0.75,
+      "2": 0.22,
+      "3": 0.02,
+      "4": 0.0
+    },
+    "legend": {
+      "0": "Very easy: direct implementation with no meaningful algorithmic choice and only routine edge cases.",
+      "1": "Easy: one familiar technique or data structure solves the problem with straightforward reasoning.",
+      "2": "Moderate: requires combining constraints, choosing an appropriate technique, or handling several non-obvious cases.",
+      "3": "Hard: requires non-trivial algorithmic insight, careful invariants, or substantial implementation detail.",
+      "4": "Very hard: demands advanced insight or multiple interacting techniques and is easy to get subtly wrong."
+    }
+  },
+  "usage": {
+    "input_tokens": 831,
+    "output_tokens": 23
+  },
+  "elapsed_seconds": 0.346,
+  "assessed_at": "2026-10-04T04:17:10Z"
+}
