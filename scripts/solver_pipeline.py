@@ -1701,7 +1701,7 @@ def check_models_command(args: argparse.Namespace) -> int:
     if not all_ok:
         print(
             "\nWARNING: One or more configured models are missing or deprecated! "
-            "Update DEFAULT_MODEL / MODEL_FALLBACKS in scripts/solver_pipeline.py and .github/workflows/solve.yml.",
+            "Update DEFAULT_MODEL / MODEL_FALLBACKS in scripts/solver_pipeline.py and .github/workflows/leetcode-solver.yml.",
             file=sys.stderr,
         )
         return 2
