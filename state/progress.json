@@ -24,7 +24,12 @@
       "id": "005-longest-palindromic-substring",
       "published_at": "2026-10-03T04:19:33Z",
       "commit": "23ae6123ee9319a7f44cdab040eafd72d3b48211"
+    },
+    {
+      "id": "006-zigzag-conversion",
+      "published_at": "2026-10-04T04:20:29Z",
+      "commit": "6e68063bb0cf8df3604de5253f4c631be3ec0607"
     }
   ],
-  "updated_at": "2026-10-03T04:19:33Z"
+  "updated_at": "2026-10-04T04:20:29Z"
 }
