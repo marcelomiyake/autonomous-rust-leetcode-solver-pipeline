@@ -29,7 +29,12 @@
       "id": "006-zigzag-conversion",
       "published_at": "2026-10-04T04:20:29Z",
       "commit": "6e68063bb0cf8df3604de5253f4c631be3ec0607"
+    },
+    {
+      "id": "007-reverse-integer",
+      "published_at": "2026-10-05T04:19:15Z",
+      "commit": "17f508ef95e77fbc6b8eacb05d243ff370b1c8ea"
     }
   ],
-  "updated_at": "2026-10-04T04:20:29Z"
+  "updated_at": "2026-10-05T04:19:15Z"
 }
