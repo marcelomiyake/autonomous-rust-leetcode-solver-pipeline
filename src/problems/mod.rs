@@ -17,3 +17,6 @@ pub mod _005_longest_palindromic_substring;
 
 #[path = "006_zigzag_conversion.rs"]
 pub mod _006_zigzag_conversion;
+
+#[path = "007_reverse_integer.rs"]
+pub mod _007_reverse_integer;
