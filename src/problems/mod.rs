@@ -20,3 +20,6 @@ pub mod _006_zigzag_conversion;
 
 #[path = "007_reverse_integer.rs"]
 pub mod _007_reverse_integer;
+
+#[path = "008_string_to_integer_atoi.rs"]
+pub mod _008_string_to_integer_atoi;

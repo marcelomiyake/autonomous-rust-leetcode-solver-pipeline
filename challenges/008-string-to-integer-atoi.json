@@ -1,0 +1,15 @@
+{
+  "id": "008-string-to-integer-atoi",
+  "title": "String to Integer (atoi)",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-06",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/string-to-integer-atoi/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-06",
+  "rust_signature": "pub fn my_atoi(s: String) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/008-string-to-integer-atoi.json"
+  }
+}
