@@ -4,20 +4,23 @@ These instructions apply to the entire repository. Read `README.md` before chang
 
 ## Project state
 
-- The repository now has a minimal Rust library crate, an authorized challenge inbox, a Gemini candidate solver, a merge-gated progress store, and daily/manual GitHub workflows. It still has no problem solutions until a maintainer supplies an authorized challenge input.
+- The repository has a Rust library crate, an authorized challenge inbox, a Gemini candidate solver, a progress store, and daily/manual GitHub workflows. Problems 001–009 currently have challenge manifests, assessments, and Rust solution modules; read `state/progress.json`, `challenges/`, and `src/problems/mod.rs` for the current state instead of assuming this is an empty scaffold.
 - `.github/workflows/build.yml` runs a SonarCloud scan on pushes to `main` and on pull requests. `sonar-project.properties` contains the project key `marcelomiyake_autonomous-rust-leetcode-solver-pipeline` and organization `marcelomiyake`.
 - Treat the authorized challenge contents and generated solutions as data that still require maintainer review. Update the README when implementation changes the pipeline or the repository's status.
-- Each authorized challenge records the human `leetcode_difficulty`; the solver runs a separate TypeSafe Jev Score assessment and publishes the structured result under `state/assessments/` with the solution pull request.
+- Each authorized challenge records the human `leetcode_difficulty`; the solver runs a separate TypeSafe Jev Score assessment and publishes the structured result under `state/assessments/` with the solution commit.
 
 ## Problem and input requirements
 
 - Accept a problem only after confirming that LeetCode supports Rust submissions for it. Skip or reject unsupported problems before generating a candidate.
 - In autonomous sequential mode, the pipeline automatically fetches the next unsolved problem (001, 002, 003, ...) via LeetCode's public GraphQL API, or uses a maintainer-supplied challenge in `challenges/`. Maintainers authorize automated retrieval of problem requirements, examples, and starter signatures.
-- Keep a stable problem identifier, constraints, and the Rust function signature with each accepted input.
+- Keep a stable problem identifier, constraints, and the exact Rust function signature with each accepted input. Do not change argument or return types when transferring a candidate. The manifest may omit implementation-only binding modifiers such as `mut`; preserve those modifiers in the generated method and any LeetCode copy when the body mutates a parameter.
 
 ## Implementation guidance
 
 - Keep each solution in a focused Rust module with tests for examples, edge cases, and relevant constraints. Put the LeetCode entry-point method inside `impl Solution { ... }`, declare a module-local `pub struct Solution;` for local compilation, and keep the manifest's `rust_signature` as the method signature without the enclosing `impl`. Put shared types in `src/common/` only when they are genuinely shared.
+- Preserve the validated method body when preparing code for LeetCode. Do not retype or simplify the entry point by hand: derive the LeetCode snippet from the accepted module and preserve required bindings such as `mut x`. Before running it in LeetCode, inspect the editor contents and confirm its signature and body match the repository candidate. Use Run and examples plus boundary cases to smoke-test; do not use Submit unless the maintainer explicitly asks for submission.
+- Before accepting a candidate, verify that its method name and parameter/return types match the manifest's `rust_signature`, and compile the exact `impl Solution` entry point as part of the focused module. Keep the validated body byte-for-byte when preparing a runner snippet, aside from the local-only `pub struct Solution;` and tests; reject stale or hand-edited copies that differ.
+- For integer-boundary problems, test valid values immediately inside the output range as well as overflowing values on both signs. Follow the problem's stated integer-width restriction; do not rely on a wider integer type when the statement forbids it.
 - Treat generated source as a candidate. Parse and validate it, limit repair attempts, and never mark or publish it as solved after a failed check.
 - Advance progress state only after publication succeeds so a failed run remains retryable. Avoid committing secrets, tokens, or generated coverage files.
 - Keep `GEMINI_API_KEY`, `TYPESAFE_API_KEY`, and `SONAR_TOKEN` in GitHub Actions secrets only. Generated code must be compiled without those secrets or persisted checkout credentials in its environment. Expose `TYPESAFE_API_KEY` only to the Jev assessment step, never to Gemini or Rust validation.
@@ -36,8 +39,9 @@ These instructions apply to the entire repository. Read `README.md` before chang
 ## Verification
 
 - For documentation or configuration-only changes, inspect the diff and validate the affected configuration.
-- For Rust changes, run `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy --all-targets --all-features -- -D warnings`.
-- When coverage or scanner configuration changes, generate the LCOV report and verify that the scanner reads that exact file. Report any checks that could not run.
+- For every Rust solution or pipeline change, run `cargo fmt --all -- --check`, `cargo check --locked --all-targets --all-features`, `cargo test --locked --all-targets --all-features`, and `cargo clippy --locked --all-targets --all-features -- -D warnings` before accepting or publishing the candidate.
+- Review the SonarCloud project Issues page across all open findings, including maintainability findings, even when the Quality Gate passes. Resolve actionable issues in source and rerun the same Rust checks. Do not close or suppress a finding just to clear the dashboard. A source fix is only confirmed in SonarCloud after a fresh analysis of the updated commit; if that analysis cannot run, report that cloud status still needs confirmation.
+- When coverage or scanner configuration changes, generate the LCOV report and verify that the scanner reads that exact file. Preserve the project key and organization. Report any checks that could not run.
 
 ## Commits
 

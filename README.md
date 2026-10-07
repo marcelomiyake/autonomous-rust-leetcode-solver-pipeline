@@ -11,6 +11,8 @@ An autonomous, guarded pipeline that sequentially discovers LeetCode problems, c
 
 The pipeline is dispatched by cron-job.org daily at 04:17 UTC (01:17 in São Paulo) through GitHub `workflow_dispatch`. A yearly GitHub schedule remains as a fallback, and maintainers can trigger runs manually. The workflow handles everything from problem discovery to atomic repository updates without manual intervention.
 
+The repository currently contains authorized challenges and Rust solutions for problems 001–009. `state/progress.json` records the published sequence; consult it and the module registry for the current state as the pipeline advances.
+
 ```mermaid
 flowchart TD
     Trigger["Trigger: cron-job.org daily at 04:17 UTC, annual GitHub fallback, or manual dispatch"] --> Discovery{"Discovery: Pending challenge in challenges/ ?"}
@@ -187,7 +189,7 @@ When updating to a newer Flash model:
 ├── challenges/
 │   ├── README.md              # Challenge manifest schema and rules
 │   ├── bodies/                # Hydrated problem descriptions, examples, constraints
-│   └── 001-two-sum.json       # Example authorized challenge manifest
+│   └── 001-two-sum.json       # First authorized challenge manifest (the inbox currently includes 001–009)
 ├── scripts/
 │   └── solver_pipeline.py     # Pure standard-library Python pipeline engine
 ├── src/
