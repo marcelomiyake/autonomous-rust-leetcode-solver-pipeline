@@ -66,4 +66,12 @@ mod tests {
         assert_eq!(Solution::reverse(-2147483648), 0);
         assert_eq!(Solution::reverse(2147483647), 0);
     }
+
+    #[test]
+    fn test_values_near_overflow_boundaries() {
+        assert_eq!(Solution::reverse(1463847412), 2147483641);
+        assert_eq!(Solution::reverse(1563847412), 0);
+        assert_eq!(Solution::reverse(-1463847412), -2147483641);
+        assert_eq!(Solution::reverse(-1563847412), 0);
+    }
 }
