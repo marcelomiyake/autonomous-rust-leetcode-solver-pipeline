@@ -39,7 +39,12 @@
       "id": "008-string-to-integer-atoi",
       "published_at": "2026-10-06T04:20:05Z",
       "commit": "c64bffafd10d9141ac32a24983def0be031b6afa"
+    },
+    {
+      "id": "009-palindrome-number",
+      "published_at": "2026-10-07T04:22:27Z",
+      "commit": "9f9838fd6b5747fa4670106b3efaf62901429068"
     }
   ],
-  "updated_at": "2026-10-06T04:20:05Z"
+  "updated_at": "2026-10-07T04:22:27Z"
 }
