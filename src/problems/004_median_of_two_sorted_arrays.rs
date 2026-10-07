@@ -41,10 +41,10 @@ impl Solution {
                 let max_left = a_left.max(b_left);
                 if (m + n) % 2 == 1 {
                     return max_left as f64;
-                } else {
-                    let min_right = a_right.min(b_right);
-                    return (max_left as f64 + min_right as f64) / 2.0;
                 }
+
+                let min_right = a_right.min(b_right);
+                return (max_left as f64 + min_right as f64) / 2.0;
             } else if a_left > b_right {
                 high = i - 1;
             } else {
