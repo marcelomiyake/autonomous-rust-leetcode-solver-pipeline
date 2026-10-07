@@ -1,0 +1,15 @@
+{
+  "id": "009-palindrome-number",
+  "title": "Palindrome Number",
+  "leetcode_difficulty": "easy",
+  "challenge_date": "2026-10-07",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/palindrome-number/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-07",
+  "rust_signature": "pub fn is_palindrome(x: i32) -> bool",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/009-palindrome-number.json"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "description": "Given an integer x, return true if x is a palindrome, and false otherwise.",
+  "constraints": [
+    "-231\u00a0<= x <= 231\u00a0- 1"
+  ],
+  "examples": [
+    {
+      "input": "x = 121",
+      "output": "true"
+    },
+    {
+      "input": "x = -121",
+      "output": "false"
+    },
+    {
+      "input": "x = 10",
+      "output": "false"
+    }
+  ]
+}

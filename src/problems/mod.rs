@@ -23,3 +23,6 @@ pub mod _007_reverse_integer;
 
 #[path = "008_string_to_integer_atoi.rs"]
 pub mod _008_string_to_integer_atoi;
+
+#[path = "009_palindrome_number.rs"]
+pub mod _009_palindrome_number;
