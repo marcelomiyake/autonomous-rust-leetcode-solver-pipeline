@@ -44,7 +44,12 @@
       "id": "009-palindrome-number",
       "published_at": "2026-10-07T04:22:27Z",
       "commit": "9f9838fd6b5747fa4670106b3efaf62901429068"
+    },
+    {
+      "id": "010-regular-expression-matching",
+      "published_at": "2026-10-08T04:21:34Z",
+      "commit": "84a46dc0cad30e20f6aa536a0c1e61ede3a0a36a"
     }
   ],
-  "updated_at": "2026-10-07T04:22:27Z"
+  "updated_at": "2026-10-08T04:21:34Z"
 }
