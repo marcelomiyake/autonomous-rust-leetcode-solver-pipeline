@@ -1,0 +1,15 @@
+{
+  "id": "010-regular-expression-matching",
+  "title": "Regular Expression Matching",
+  "leetcode_difficulty": "hard",
+  "challenge_date": "2026-10-08",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/regular-expression-matching/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-08",
+  "rust_signature": "pub fn is_match(s: String, p: String) -> bool",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/010-regular-expression-matching.json"
+  }
+}

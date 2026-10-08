@@ -26,3 +26,6 @@ pub mod _008_string_to_integer_atoi;
 
 #[path = "009_palindrome_number.rs"]
 pub mod _009_palindrome_number;
+
+#[path = "010_regular_expression_matching.rs"]
+pub mod _010_regular_expression_matching;

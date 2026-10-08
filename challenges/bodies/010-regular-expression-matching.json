@@ -1,0 +1,24 @@
+{
+  "description": "Given an input string s\u00a0and a pattern p, implement regular expression matching with support for '.' and '*' where:\n\n\t'.' Matches any single character.\u200b\u200b\u200b\u200b\n\t'*' Matches zero or more of the preceding element.\n\nReturn a boolean indicating whether the matching covers the entire input string (not partial).",
+  "constraints": [
+    "1 <= s.length\u00a0<= 20",
+    "1 <= p.length\u00a0<= 20",
+    "s contains only lowercase English letters.",
+    "p contains only lowercase English letters, '.', and\u00a0'*'.",
+    "It is guaranteed for each appearance of the character '*', there will be a previous valid character to match."
+  ],
+  "examples": [
+    {
+      "input": "s = \"aa\", p = \"a\"",
+      "output": "false"
+    },
+    {
+      "input": "s = \"aa\", p = \"a*\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"ab\", p = \".*\"",
+      "output": "true"
+    }
+  ]
+}
