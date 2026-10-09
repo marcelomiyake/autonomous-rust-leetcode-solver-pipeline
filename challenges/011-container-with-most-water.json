@@ -1,0 +1,15 @@
+{
+  "id": "011-container-with-most-water",
+  "title": "Container With Most Water",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-09",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/container-with-most-water/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-09",
+  "rust_signature": "pub fn max_area(height: Vec<i32>) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/011-container-with-most-water.json"
+  }
+}

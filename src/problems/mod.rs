@@ -29,3 +29,6 @@ pub mod _009_palindrome_number;
 
 #[path = "010_regular_expression_matching.rs"]
 pub mod _010_regular_expression_matching;
+
+#[path = "011_container_with_most_water.rs"]
+pub mod _011_container_with_most_water;
