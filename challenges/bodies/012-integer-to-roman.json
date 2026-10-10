@@ -1,0 +1,17 @@
+{
+  "description": "Seven different symbols represent Roman numerals with the following values:\n\n\t\n\t\t\n\t\t\tSymbol\n\t\t\tValue\n\t\t\n\t\n\t\n\t\t\n\t\t\tI\n\t\t\t1\n\t\t\n\t\t\n\t\t\tV\n\t\t\t5\n\t\t\n\t\t\n\t\t\tX\n\t\t\t10\n\t\t\n\t\t\n\t\t\tL\n\t\t\t50\n\t\t\n\t\t\n\t\t\tC\n\t\t\t100\n\t\t\n\t\t\n\t\t\tD\n\t\t\t500\n\t\t\n\t\t\n\t\t\tM\n\t\t\t1000\n\t\t\n\t\n\nRoman numerals are formed by appending\u00a0the conversions of\u00a0decimal place values\u00a0from highest to lowest. Converting a decimal place value into a Roman numeral has the following rules:\n\n\tIf the value does not start with 4 or\u00a09, select the symbol of the maximal value that can be subtracted from the input, append that symbol to the result, subtract its value, and convert the remainder to a Roman numeral.\n\tIf the value starts with 4 or 9 use the\u00a0subtractive form\u00a0representing\u00a0one symbol subtracted from the following symbol, for example,\u00a04 is 1 (I) less than 5 (V): IV\u00a0and 9 is 1 (I) less than 10 (X): IX.\u00a0Only the following subtractive forms are used: 4 (IV), 9 (IX),\u00a040 (XL), 90 (XC), 400 (CD) and 900 (CM).\n\tOnly powers of 10 (I, X, C, M) can be appended consecutively at most 3 times to represent multiples of 10. You cannot append 5\u00a0(V), 50 (L), or 500 (D) multiple times. If you need to append a symbol\u00a04 times\u00a0use the subtractive form.\n\nGiven an integer, convert it to a Roman numeral.",
+  "constraints": [
+    "1 <= num <= 3999"
+  ],
+  "examples": [
+    {
+      "example": "3000 = MMM as 1000 (M) + 1000 (M) + 1000 (M)\n 700 = DCC as 500 (D) + 100 (C) + 100 (C)\n  40 = XL as 10 (X) less of 50 (L)\n   9 = IX as 1 (I) less of 10 (X)\nNote: 49 is not 1 (I) less of 50 (L) because the conversion is based on decimal places"
+    },
+    {
+      "example": "50 = L\n 8 = VIII"
+    },
+    {
+      "example": "1000 = M\n 900 = CM\n  90 = XC\n   4 = IV"
+    }
+  ]
+}

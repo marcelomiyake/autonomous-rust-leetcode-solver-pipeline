@@ -32,3 +32,6 @@ pub mod _010_regular_expression_matching;
 
 #[path = "011_container_with_most_water.rs"]
 pub mod _011_container_with_most_water;
+
+#[path = "012_integer_to_roman.rs"]
+pub mod _012_integer_to_roman;
