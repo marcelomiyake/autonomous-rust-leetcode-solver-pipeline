@@ -54,7 +54,12 @@
       "id": "011-container-with-most-water",
       "published_at": "2026-10-09T04:18:37Z",
       "commit": "633d465ad61764585f0a1745fa5073f0a68e9d66"
+    },
+    {
+      "id": "012-integer-to-roman",
+      "published_at": "2026-10-10T04:19:17Z",
+      "commit": "567d0e934b3747312742f85b6e95d534c5a7908b"
     }
   ],
-  "updated_at": "2026-10-09T04:18:37Z"
+  "updated_at": "2026-10-10T04:19:17Z"
 }
