@@ -35,3 +35,6 @@ pub mod _011_container_with_most_water;
 
 #[path = "012_integer_to_roman.rs"]
 pub mod _012_integer_to_roman;
+
+#[path = "013_roman_to_integer.rs"]
+pub mod _013_roman_to_integer;

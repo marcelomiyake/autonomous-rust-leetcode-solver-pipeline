@@ -1,0 +1,15 @@
+{
+  "id": "013-roman-to-integer",
+  "title": "Roman to Integer",
+  "leetcode_difficulty": "easy",
+  "challenge_date": "2026-10-11",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/roman-to-integer/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-11",
+  "rust_signature": "pub fn roman_to_int(s: String) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/013-roman-to-integer.json"
+  }
+}
