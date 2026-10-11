@@ -1279,6 +1279,96 @@ def _has_method_in_solution_impl(source: str, function_name: str) -> bool:
     return False
 
 
+def build_leetcode_snippet(source: str, signature: str) -> str:
+    """Build the LeetCode-ready source from the validated module without retyping its method."""
+    masked = _mask_rust_non_code(source)
+    signature_match = re.match(r"\s*pub\s+fn\s+([A-Za-z_][A-Za-z0-9_]*)\b", signature)
+    if not signature_match:
+        raise PipelineError("challenge rust_signature must begin with `pub fn <method>`")
+    method_name = signature_match.group(1)
+
+    impl_pattern = re.compile(r"\bimpl\s+Solution\s*\{")
+    method_pattern = re.compile(rf"\bpub\s+fn\s+{re.escape(method_name)}\b")
+    selected = False
+    for impl_match in impl_pattern.finditer(masked):
+        impl_open = impl_match.end() - 1
+        impl_close = impl_open + 1
+        depth = 1
+        while impl_close < len(masked) and depth:
+            if masked[impl_close] == "{":
+                depth += 1
+            elif masked[impl_close] == "}":
+                depth -= 1
+            impl_close += 1
+        if depth:
+            continue
+        method_match = method_pattern.search(masked, impl_open + 1, impl_close - 1)
+        if not method_match:
+            continue
+
+        body_open = masked.find("{", method_match.end(), impl_close - 1)
+        if body_open < 0:
+            continue
+        body_close = body_open + 1
+        body_depth = 1
+        while body_close < impl_close - 1 and body_depth:
+            if masked[body_close] == "{":
+                body_depth += 1
+            elif masked[body_close] == "}":
+                body_depth -= 1
+            body_close += 1
+        if body_depth:
+            continue
+        method_signature = source[method_match.start() : body_open].strip()
+        normalize = lambda value: re.sub(r"\bmut\s+", "", value)
+        if normalize(method_signature) != normalize(signature):
+            raise PipelineError(
+                "candidate method signature does not match challenge rust_signature "
+                "(implementation-only `mut` bindings are allowed)"
+            )
+        selected = True
+        break
+
+    if selected is None:
+        raise PipelineError(f"candidate does not define `pub fn {method_name}` inside impl Solution")
+
+    # LeetCode supplies Solution; retain its method and any supporting imports/types verbatim.
+    tests_match = re.search(r"#\s*\[\s*cfg\s*\(\s*test\s*\)\s*\]", masked)
+    compilable_source = source[: tests_match.start()] if tests_match else source
+    solution_decl = re.search(r"\bpub\s+struct\s+Solution\s*;", _mask_rust_non_code(compilable_source))
+    if not solution_decl:
+        raise PipelineError("candidate must define the local `pub struct Solution;` harness type")
+    leetcode_source = compilable_source[: solution_decl.start()] + compilable_source[solution_decl.end() :]
+    return leetcode_source.strip() + "\n"
+
+
+def validate_leetcode_snippet(root: Path, challenge: dict[str, Any]) -> tuple[int, str]:
+    """Compile the exact LeetCode-ready candidate and save it as a reviewable workflow artifact."""
+    candidate = source_path(root, challenge["id"])
+    if not candidate.is_file():
+        raise PipelineError(f"candidate solution is missing: {candidate}")
+    source = remove_metadata_header(candidate.read_text(encoding="utf-8"))
+    snippet = build_leetcode_snippet(source, challenge["rust_signature"])
+    snippet_path = root / ".pipeline" / "leetcode-snippet.rs"
+    snippet_path.parent.mkdir(parents=True, exist_ok=True)
+    snippet_path.write_text(snippet, encoding="utf-8")
+
+    compile_path = snippet_path.with_name("leetcode-compile.rs")
+    compile_path.write_text("struct Solution;\n\n" + snippet, encoding="utf-8")
+    output_path = snippet_path.with_suffix(".rlib")
+    return run_command(
+        root,
+        [
+            "rustc",
+            "--edition=2024",
+            "--crate-type=lib",
+            str(compile_path),
+            "-o",
+            str(output_path),
+        ],
+    )
+
+
 def validate_model_output(value: dict[str, Any], signature: str | None = None) -> None:
     source = value.get("rust_source")
     if not isinstance(source, str) or not source.strip():
@@ -1508,6 +1598,9 @@ def run_command(root: Path, command: list[str]) -> tuple[int, str]:
 
 def validate(args: argparse.Namespace) -> int:
     root = root_from_argument(args.root)
+    challenge = load_challenge(
+        challenge_path(root, args.challenge_path, allow_resolved=True), root=root
+    )
     commands = [
         ["cargo", "fmt", "--all", "--", "--check"],
         ["cargo", "check", "--locked", "--all-targets", "--all-features"],
@@ -1522,6 +1615,17 @@ def validate(args: argparse.Namespace) -> int:
             failures.append((command, code, output))
         report.append(f"$ {' '.join(command)}\nexit_code={code}\n{output.rstrip()}\n")
 
+    snippet_command = ["rustc", "--edition=2024", "--crate-type=lib", ".pipeline/leetcode-compile.rs"]
+    try:
+        code, output = validate_leetcode_snippet(root, challenge)
+    except PipelineError as exc:
+        code, output = 1, str(exc)
+    if code:
+        failures.append((snippet_command, code, output))
+    report.append(
+        f"$ {' '.join(snippet_command)}\nexit_code={code}\n{output.rstrip()}\n"
+    )
+
     diagnostics_path = root / ".pipeline" / "diagnostics.txt"
     diagnostics_path.parent.mkdir(parents=True, exist_ok=True)
     if failures:
@@ -1530,7 +1634,7 @@ def validate(args: argparse.Namespace) -> int:
         print(f"Candidate validation failed: {failed_names}", file=sys.stderr)
         return 1
     diagnostics_path.unlink(missing_ok=True)
-    print("Candidate validation passed: fmt, check, test, and clippy.")
+    print("Candidate validation passed: fmt, check, test, clippy, and LeetCode snippet compile.")
     return 0
 
 
@@ -1599,7 +1703,7 @@ guarantee and not a replacement for reviewer judgment.
 - Assessment wall time: `{float(assessment['elapsed_seconds']):.2f}s`
 - Stored assessment: `state/assessments/{challenge['id']}.json`
 
-The candidate was checked with `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy -D warnings` before this branch was published. SonarQube Cloud runs separately on the pull request. Reviewers should confirm correctness and licensing before merging.
+The candidate was checked with `cargo fmt --check`, `cargo check`, `cargo test`, `cargo clippy -D warnings`, and a standalone compile of the LeetCode-ready snippet before this branch was published. SonarQube Cloud runs separately on the pull request. Reviewers should confirm correctness and licensing before merging.
 """
     destination = root / ".pipeline" / "pr-body.md"
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -1747,6 +1851,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     validate_parser = subparsers.add_parser("validate")
     validate_parser.add_argument("--root")
+    validate_parser.add_argument("--challenge-path", required=True)
     validate_parser.set_defaults(handler=validate)
 
     finalize_parser = subparsers.add_parser("finalize")

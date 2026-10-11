@@ -17,6 +17,8 @@ from scripts.solver_pipeline import (
     module_declaration,
     module_name,
     parse_leetcode_content,
+    build_leetcode_snippet,
+    validate_leetcode_snippet,
     parse_model_json,
     parse_jev_response,
     prompt_for,
@@ -44,6 +46,48 @@ VALID_CHALLENGE = {
 
 
 class SolverPipelineTests(unittest.TestCase):
+    def test_leetcode_snippet_preserves_mutable_binding_and_matches_signature(self) -> None:
+        source = """pub struct Solution;
+impl Solution {
+    pub fn solve(mut value: i32) -> i32 {
+        value += 1;
+        value
+    }
+}
+#[cfg(test)]
+mod tests {}
+"""
+        snippet = build_leetcode_snippet(source, "pub fn solve(value: i32) -> i32")
+        self.assertIn("pub fn solve(mut value: i32)", snippet)
+        self.assertNotIn("struct Solution", snippet)
+        self.assertNotIn("mod tests", snippet)
+        with self.assertRaisesRegex(RuntimeError, "does not match"):
+            build_leetcode_snippet(source, "pub fn solve(value: i64) -> i32")
+
+    def test_leetcode_snippet_gate_compiles_exact_entry_point(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            candidate = root / "src" / "problems" / "sample_problem.rs"
+            candidate.parent.mkdir(parents=True)
+            candidate.write_text(
+                "pub struct Solution;\nimpl Solution {\n"
+                "    pub fn solve(mut value: i32) -> i32 { value += 1; value }\n}\n",
+                encoding="utf-8",
+            )
+            challenge = {**VALID_CHALLENGE, "id": "sample-problem"}
+            code, output = validate_leetcode_snippet(root, challenge)
+            self.assertEqual(code, 0, output)
+            self.assertIn("mut value", (root / ".pipeline" / "leetcode-snippet.rs").read_text())
+
+            candidate.write_text(
+                "pub struct Solution;\nimpl Solution {\n"
+                "    pub fn solve(value: i32) -> i32 { value += 1; value }\n}\n",
+                encoding="utf-8",
+            )
+            code, output = validate_leetcode_snippet(root, challenge)
+            self.assertNotEqual(code, 0)
+            self.assertIn("cannot assign to immutable argument", output)
+
     def test_load_challenge_accepts_authorized_rust_input(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             path = Path(temporary_directory) / "sample-problem.json"

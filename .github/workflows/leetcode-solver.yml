@@ -97,7 +97,9 @@ jobs:
         id: validate_1
         if: steps.select.outputs.found == 'true'
         continue-on-error: true
-        run: python3 scripts/solver_pipeline.py validate
+        env:
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+        run: python3 scripts/solver_pipeline.py validate --challenge-path "$CHALLENGE_PATH"
 
       - name: Ask Gemini to repair candidate (attempt 2)
         if: steps.validate_1.outcome == 'failure'
@@ -117,7 +119,9 @@ jobs:
         id: validate_2
         if: steps.validate_1.outcome == 'failure'
         continue-on-error: true
-        run: python3 scripts/solver_pipeline.py validate
+        env:
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+        run: python3 scripts/solver_pipeline.py validate --challenge-path "$CHALLENGE_PATH"
 
       - name: Ask Gemini to repair candidate (attempt 3)
         if: steps.validate_2.outcome == 'failure'
@@ -137,7 +141,9 @@ jobs:
         id: validate_3
         if: steps.validate_2.outcome == 'failure'
         continue-on-error: true
-        run: python3 scripts/solver_pipeline.py validate
+        env:
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+        run: python3 scripts/solver_pipeline.py validate --challenge-path "$CHALLENGE_PATH"
 
       - name: Stop after failed validation
         if: >-

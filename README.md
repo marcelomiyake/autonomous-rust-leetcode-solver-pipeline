@@ -37,8 +37,10 @@ flowchart TD
     SecurityCheck -- Failed --> RepairLoop
     SecurityCheck -- Passed --> CargoValidation["Local Cargo Gates (fmt, check, test, clippy -D warnings)"]
 
-    CargoValidation -- Passed --> Coverage["Generate LLVM LCOV Coverage Report (cargo-llvm-cov)"]
+    CargoValidation -- Passed --> LeetCodeCompile["Compile exact LeetCode-ready snippet with rustc"]
+    LeetCodeCompile -- Passed --> Coverage["Generate LLVM LCOV Coverage Report (cargo-llvm-cov)"]
     CargoValidation -- Failed --> RepairLoop{"Repair attempts < 2?"}
+    LeetCodeCompile -- Failed --> RepairLoop
 
     RepairLoop -- Yes --> FeedDiagnostics["Feed compiler/clippy diagnostics back to Gemini"]
     FeedDiagnostics --> GeminiGen
@@ -95,7 +97,7 @@ sequenceDiagram
 5. **Defense-in-Depth Security:**
    - Generated code is compiled and tested with all API tokens and git credentials scrubbed from the subprocess environment.
    - Lexical and AST validation rejects candidates containing `unsafe`, raw pointers, FFI, `std::fs`, `std::net`, `std::process`, `fn main`, or markdown formatting leaks.
-6. **Strict Quality Gates:** Every solution must pass `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy --all-targets --all-features -- -D warnings`.
+6. **Strict Quality Gates:** Every solution must pass `cargo fmt --check`, `cargo check`, `cargo test`, `cargo clippy --all-targets --all-features -- -D warnings`, and compilation of a LeetCode-ready source artifact derived directly from the validated candidate. Its signature is checked against the challenge manifest (allowing implementation-only `mut` bindings), and `rustc` compiles the artifact with a local `Solution` harness before publication. The paste-ready artifact is written to ignored `.pipeline/leetcode-snippet.rs`; it omits the local-only `Solution` declaration and tests while retaining the candidate entry point byte-for-byte. This local gate does not call LeetCode's hosted Run or Submit service.
 7. **Coverage & SonarQube Cloud:** Test coverage is generated via `cargo-llvm-cov` producing an LCOV report (`lcov.info`) ingested by SonarQube Cloud with `sonar.qualitygate.wait=true`.
 8. **Atomic Progress Advancement:** The progress tracker (`state/progress.json`) is updated only after all gates pass and publication succeeds. Failed runs leave the problem uncompleted so they remain safely retryable.
 9. **LeetCode Rust Interface:** Every solution entry point is an associated method inside `impl Solution { ... }`, matching LeetCode's Rust editor. Each standalone module declares its own `pub struct Solution;`; the pipeline prompts for this shape and rejects candidates whose challenge method is outside the implementation block.
