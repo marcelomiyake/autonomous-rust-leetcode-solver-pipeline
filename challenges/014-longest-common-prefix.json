@@ -1,0 +1,15 @@
+{
+  "id": "014-longest-common-prefix",
+  "title": "Longest Common Prefix",
+  "leetcode_difficulty": "easy",
+  "challenge_date": "2026-10-12",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/longest-common-prefix/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-12",
+  "rust_signature": "pub fn longest_common_prefix(strs: Vec<String>) -> String",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/014-longest-common-prefix.json"
+  }
+}

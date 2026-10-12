@@ -38,3 +38,6 @@ pub mod _012_integer_to_roman;
 
 #[path = "013_roman_to_integer.rs"]
 pub mod _013_roman_to_integer;
+
+#[path = "014_longest_common_prefix.rs"]
+pub mod _014_longest_common_prefix;
