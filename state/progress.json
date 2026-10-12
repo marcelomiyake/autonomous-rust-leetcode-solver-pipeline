@@ -64,7 +64,12 @@
       "id": "013-roman-to-integer",
       "published_at": "2026-10-11T04:19:13Z",
       "commit": "5f8e525a4b094af623f97a4a737a466f925ef1fb"
+    },
+    {
+      "id": "014-longest-common-prefix",
+      "published_at": "2026-10-12T04:19:26Z",
+      "commit": "eab23c2d5e3ad96d05d78a90027068adc4f10850"
     }
   ],
-  "updated_at": "2026-10-11T04:19:13Z"
+  "updated_at": "2026-10-12T04:19:26Z"
 }
