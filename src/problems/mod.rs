@@ -41,3 +41,6 @@ pub mod _013_roman_to_integer;
 
 #[path = "014_longest_common_prefix.rs"]
 pub mod _014_longest_common_prefix;
+
+#[path = "015_3sum.rs"]
+pub mod _015_3sum;

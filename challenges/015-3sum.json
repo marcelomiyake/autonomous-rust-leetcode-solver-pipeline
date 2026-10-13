@@ -1,0 +1,15 @@
+{
+  "id": "015-3sum",
+  "title": "3Sum",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-13",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/3sum/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-13",
+  "rust_signature": "pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/015-3sum.json"
+  }
+}
