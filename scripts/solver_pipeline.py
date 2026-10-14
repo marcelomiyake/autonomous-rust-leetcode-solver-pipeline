@@ -782,15 +782,17 @@ def prompt_for(challenge: dict[str, Any], current_source: str | None = None, dia
     }
     if current_source is None:
         task = (
-            "Generate a correct Rust module body for this problem. Implement the exact Rust signature, "
-            "put the entry-point method inside `impl Solution`, and include a module-local `pub struct Solution;` "
+            "Generate a correct Rust module body for this problem. Implement the exact Rust signature "
+            "without changing it: do not add `mut` to parameters; rebind inside the body instead "
+            "(`let mut x = x;`). Put the entry-point method inside `impl Solution`, and include a module-local `pub struct Solution;` "
             "so the module compiles independently. Call it as `Solution::method` in focused #[cfg(test)] tests "
             "for examples, edge cases, and relevant constraints, and use only the Rust standard library."
         )
     else:
         task = (
             "Repair the Rust module body below using the compiler/test diagnostics. Keep the exact public "
-            "signature, keep its entry-point method inside `impl Solution`, keep the module-local `pub struct Solution;`, "
+            "signature without adding `mut` to parameters (rebind inside the body instead), keep its "
+            "entry-point method inside `impl Solution`, keep the module-local `pub struct Solution;`, "
             "call it as `Solution::method` in the tests, and improve the tests when useful. Return the complete "
             "replacement module body."
         )
@@ -1279,6 +1281,13 @@ def _has_method_in_solution_impl(source: str, function_name: str) -> bool:
     return False
 
 
+def _normalize_signature(signature: str) -> str:
+    """Ignore formatting-only differences such as rustfmt line wrapping."""
+    collapsed = re.sub(r"\s+", " ", signature).strip()
+    collapsed = re.sub(r"\s*([(),<>])\s*", r"\1", collapsed)
+    return collapsed.replace(",)", ")")
+
+
 def build_leetcode_snippet(source: str, signature: str) -> str:
     """Build the LeetCode-ready source from the validated module without retyping its method."""
     masked = _mask_rust_non_code(source)
@@ -1319,17 +1328,16 @@ def build_leetcode_snippet(source: str, signature: str) -> str:
             body_close += 1
         if body_depth:
             continue
-        method_signature = source[method_match.start() : body_open].strip()
-        normalize = lambda value: re.sub(r"\bmut\s+", "", value)
-        if normalize(method_signature) != normalize(signature):
+        method_signature = source[method_match.start() : body_open]
+        if _normalize_signature(method_signature) != _normalize_signature(signature):
             raise PipelineError(
-                "candidate method signature does not match challenge rust_signature "
-                "(implementation-only `mut` bindings are allowed)"
+                "candidate method signature does not match challenge rust_signature exactly; "
+                "do not add `mut` to parameters, rebind inside the body instead (`let mut x = x;`)"
             )
         selected = True
         break
 
-    if selected is None:
+    if not selected:
         raise PipelineError(f"candidate does not define `pub fn {method_name}` inside impl Solution")
 
     # LeetCode supplies Solution; retain its method and any supporting imports/types verbatim.
