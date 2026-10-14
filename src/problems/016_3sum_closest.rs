@@ -15,7 +15,8 @@
 pub struct Solution;
 
 impl Solution {
-    pub fn three_sum_closest(mut nums: Vec<i32>, target: i32) -> i32 {
+    pub fn three_sum_closest(nums: Vec<i32>, target: i32) -> i32 {
+        let mut nums = nums;
         nums.sort_unstable();
         let n = nums.len();
         let mut closest_sum = nums[0] + nums[1] + nums[2];
