@@ -44,3 +44,6 @@ pub mod _014_longest_common_prefix;
 
 #[path = "015_3sum.rs"]
 pub mod _015_3sum;
+
+#[path = "016_3sum_closest.rs"]
+pub mod _016_3sum_closest;

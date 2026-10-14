@@ -1,0 +1,15 @@
+{
+  "id": "016-3sum-closest",
+  "title": "3Sum Closest",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-14",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/3sum-closest/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-14",
+  "rust_signature": "pub fn three_sum_closest(nums: Vec<i32>, target: i32) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/016-3sum-closest.json"
+  }
+}

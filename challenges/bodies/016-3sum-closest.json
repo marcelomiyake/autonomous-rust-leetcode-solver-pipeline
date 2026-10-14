@@ -1,0 +1,18 @@
+{
+  "description": "You are given an integer array nums of length n and an integer target.\n\nFind three integers at distinct indices in nums such that the sum is closest to target.\n\nReturn the sum of the three integers.\n\nYou may assume that each input would have exactly one solution.",
+  "constraints": [
+    "3 <= nums.length <= 500",
+    "-1000 <= nums[i] <= 1000",
+    "-104 <= target <= 104"
+  ],
+  "examples": [
+    {
+      "input": "nums = [-1,2,1,-4], target = 1",
+      "output": "2"
+    },
+    {
+      "input": "nums = [0,0,0], target = 1",
+      "output": "0"
+    }
+  ]
+}
