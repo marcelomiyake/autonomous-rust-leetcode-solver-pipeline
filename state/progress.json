@@ -74,7 +74,12 @@
       "id": "015-3sum",
       "published_at": "2026-10-13T04:20:14Z",
       "commit": "85384eb516242f42be236aafe457e10ca46110f3"
+    },
+    {
+      "id": "016-3sum-closest",
+      "published_at": "2026-10-14T09:23:23Z",
+      "commit": "94a20667a5ca47f8ef3dec3dcbe02c16e0195a67"
     }
   ],
-  "updated_at": "2026-10-13T04:20:14Z"
+  "updated_at": "2026-10-14T09:23:23Z"
 }
