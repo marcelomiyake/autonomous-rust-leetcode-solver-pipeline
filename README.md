@@ -131,6 +131,8 @@ The annual GitHub event appears separately as `schedule`; cron-job.org runs appe
 
 Each daily dispatch requests one run. Generation, repairs, retries, and model fallbacks can consume multiple API requests per run; actual free-tier availability depends on the configured models and account quota.
 
+If the initial Gemini request still fails after the in-script retries and model fallbacks (for example, HTTP 503 "high demand" on every Flash model), the workflow waits 20 minutes and runs the generation step once more; the job timeout is 60 minutes to fit that cool-down. Progress is not advanced on failure, so re-running the workflow retries the same problem.
+
 ---
 
 ## Checking & Updating Gemini Free Tier Models
