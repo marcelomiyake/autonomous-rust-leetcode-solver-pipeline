@@ -29,9 +29,11 @@ pub struct Solution;
 
 impl Solution {
     pub fn add_two_numbers(
-        mut l1: Option<Box<ListNode>>,
-        mut l2: Option<Box<ListNode>>,
+        l1: Option<Box<ListNode>>,
+        l2: Option<Box<ListNode>>,
     ) -> Option<Box<ListNode>> {
+        let mut l1 = l1;
+        let mut l2 = l2;
         let mut dummy_head = ListNode::new(0);
         let mut tail = &mut dummy_head;
         let mut carry = 0;

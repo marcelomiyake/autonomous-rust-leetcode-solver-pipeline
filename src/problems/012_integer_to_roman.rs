@@ -15,7 +15,8 @@
 pub struct Solution;
 
 impl Solution {
-    pub fn int_to_roman(mut num: i32) -> String {
+    pub fn int_to_roman(num: i32) -> String {
+        let mut num = num;
         const MAPPINGS: [(i32, &str); 13] = [
             (1000, "M"),
             (900, "CM"),

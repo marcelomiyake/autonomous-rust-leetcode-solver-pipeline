@@ -15,7 +15,8 @@
 pub struct Solution;
 
 impl Solution {
-    pub fn reverse(mut x: i32) -> i32 {
+    pub fn reverse(x: i32) -> i32 {
+        let mut x = x;
         let mut rev: i32 = 0;
         while x != 0 {
             let pop = x % 10;
