@@ -1125,7 +1125,7 @@ def call_gemini(prompt: str, settings: dict[str, Any]) -> tuple[dict[str, Any], 
                 last_error = exc
                 if isinstance(exc, PipelineError) and "returned HTTP" in str(exc):
                     break
-            if attempt < 3:
+            if attempt < 2:
                 time.sleep(10 * (attempt + 1))
         if model_index < len(models_to_try) - 1:
             print(

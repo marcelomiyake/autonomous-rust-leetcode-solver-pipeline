@@ -31,7 +31,7 @@ jobs:
   generate:
     if: github.repository == 'marcelomiyake/autonomous-rust-leetcode-solver-pipeline'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       RUN_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'publish' }}
     steps:
@@ -79,6 +79,31 @@ jobs:
       - name: Ask Gemini for an initial candidate
         id: generate
         if: steps.select.outputs.found == 'true'
+        # Gemini capacity spikes can outlast the in-script retries; retry once after a cool-down.
+        continue-on-error: true
+        env:
+          CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_FALLBACK_MODEL: gemini-3.7-flash
+          GEMINI_EFFORT: medium
+          GEMINI_TEMPERATURE: "1.0"
+          GEMINI_MAX_OUTPUT_TOKENS: "12000"
+        run: |
+          set -euo pipefail
+          python3 scripts/solver_pipeline.py generate \
+            --challenge-path "$CHALLENGE_PATH" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Wait for Gemini capacity
+        if: steps.generate.outcome == 'failure'
+        run: |
+          echo "Initial Gemini request failed; waiting 20 minutes before one more attempt."
+          sleep 1200
+
+      - name: Ask Gemini for an initial candidate (after cool-down)
+        id: generate_retry
+        if: steps.generate.outcome == 'failure'
         env:
           CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -95,7 +120,9 @@ jobs:
 
       - name: Validate candidate (attempt 1)
         id: validate_1
-        if: steps.select.outputs.found == 'true'
+        if: >-
+          steps.select.outputs.found == 'true' &&
+          (steps.generate.outcome == 'success' || steps.generate_retry.outcome == 'success')
         continue-on-error: true
         env:
           CHALLENGE_PATH: ${{ steps.hydrate.outputs.challenge_path }}
@@ -213,8 +240,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           CHALLENGE_ID: ${{ steps.select.outputs.challenge_id }}
-          MODULE_NAME: ${{ steps.generate.outputs.module_name }}
-          FILE_NAME: ${{ steps.generate.outputs.file_name }}
+          MODULE_NAME: ${{ steps.generate.outputs.module_name || steps.generate_retry.outputs.module_name }}
+          FILE_NAME: ${{ steps.generate.outputs.file_name || steps.generate_retry.outputs.file_name }}
           # Publish the original manifest; the hydrated .pipeline payload is temporary.
           CHALLENGE_PATH: ${{ steps.select.outputs.challenge_path }}
         run: |
