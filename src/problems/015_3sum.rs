@@ -15,7 +15,8 @@
 pub struct Solution;
 
 impl Solution {
-    pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+    pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut nums = nums;
         nums.sort_unstable();
         let mut result = Vec::new();
         let n = nums.len();
