@@ -1,0 +1,15 @@
+{
+  "id": "017-letter-combinations-of-a-phone-number",
+  "title": "Letter Combinations of a Phone Number",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-15",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-15",
+  "rust_signature": "pub fn letter_combinations(digits: String) -> Vec<String>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/017-letter-combinations-of-a-phone-number.json"
+  }
+}

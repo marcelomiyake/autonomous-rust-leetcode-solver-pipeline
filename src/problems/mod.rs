@@ -47,3 +47,6 @@ pub mod _015_3sum;
 
 #[path = "016_3sum_closest.rs"]
 pub mod _016_3sum_closest;
+
+#[path = "017_letter_combinations_of_a_phone_number.rs"]
+pub mod _017_letter_combinations_of_a_phone_number;
