@@ -1,0 +1,18 @@
+{
+  "description": "Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:\n\n\t0 <= a, b, c, d\u00a0< n\n\ta, b, c, and d are distinct.\n\tnums[a] + nums[b] + nums[c] + nums[d] == target\n\nYou may return the answer in any order.",
+  "constraints": [
+    "1 <= nums.length <= 200",
+    "-109 <= nums[i] <= 109",
+    "-109 <= target <= 109"
+  ],
+  "examples": [
+    {
+      "input": "nums = [1,0,-1,0,-2,2], target = 0",
+      "output": "[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]"
+    },
+    {
+      "input": "nums = [2,2,2,2,2], target = 8",
+      "output": "[[2,2,2,2]]"
+    }
+  ]
+}
