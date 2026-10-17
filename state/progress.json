@@ -89,7 +89,12 @@
       "id": "018-4sum",
       "published_at": "2026-10-16T04:24:15Z",
       "commit": "de099420d696b67d3e64e8c1705165433e56fac8"
+    },
+    {
+      "id": "019-remove-nth-node-from-end-of-list",
+      "published_at": "2026-10-17T04:19:23Z",
+      "commit": "3d2fd1d1647a5a1687ca405aef47f130d11551e3"
     }
   ],
-  "updated_at": "2026-10-16T04:24:15Z"
+  "updated_at": "2026-10-17T04:19:23Z"
 }
