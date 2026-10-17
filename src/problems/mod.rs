@@ -53,3 +53,6 @@ pub mod _017_letter_combinations_of_a_phone_number;
 
 #[path = "018_4sum.rs"]
 pub mod _018_4sum;
+
+#[path = "019_remove_nth_node_from_end_of_list.rs"]
+pub mod _019_remove_nth_node_from_end_of_list;

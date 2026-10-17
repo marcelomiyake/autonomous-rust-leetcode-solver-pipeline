@@ -1,0 +1,15 @@
+{
+  "id": "019-remove-nth-node-from-end-of-list",
+  "title": "Remove Nth Node From End of List",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-17",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-17",
+  "rust_signature": "pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/019-remove-nth-node-from-end-of-list.json"
+  }
+}
