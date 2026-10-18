@@ -94,7 +94,12 @@
       "id": "019-remove-nth-node-from-end-of-list",
       "published_at": "2026-10-17T04:19:23Z",
       "commit": "3d2fd1d1647a5a1687ca405aef47f130d11551e3"
+    },
+    {
+      "id": "020-valid-parentheses",
+      "published_at": "2026-10-18T04:21:19Z",
+      "commit": "46d3862c2bba4d78acad6b356cef30f13c20c31c"
     }
   ],
-  "updated_at": "2026-10-17T04:19:23Z"
+  "updated_at": "2026-10-18T04:21:19Z"
 }
