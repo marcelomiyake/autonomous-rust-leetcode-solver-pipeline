@@ -56,3 +56,6 @@ pub mod _018_4sum;
 
 #[path = "019_remove_nth_node_from_end_of_list.rs"]
 pub mod _019_remove_nth_node_from_end_of_list;
+
+#[path = "020_valid_parentheses.rs"]
+pub mod _020_valid_parentheses;

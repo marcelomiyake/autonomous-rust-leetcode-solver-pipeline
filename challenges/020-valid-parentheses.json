@@ -1,0 +1,15 @@
+{
+  "id": "020-valid-parentheses",
+  "title": "Valid Parentheses",
+  "leetcode_difficulty": "easy",
+  "challenge_date": "2026-10-18",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/valid-parentheses/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-18",
+  "rust_signature": "pub fn is_valid(s: String) -> bool",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/020-valid-parentheses.json"
+  }
+}
