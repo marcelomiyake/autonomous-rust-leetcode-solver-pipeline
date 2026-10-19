@@ -59,3 +59,6 @@ pub mod _019_remove_nth_node_from_end_of_list;
 
 #[path = "020_valid_parentheses.rs"]
 pub mod _020_valid_parentheses;
+
+#[path = "021_merge_two_sorted_lists.rs"]
+pub mod _021_merge_two_sorted_lists;
