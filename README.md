@@ -1,6 +1,6 @@
 # Autonomous Rust LeetCode Solver Pipeline
 
-An autonomous, guarded pipeline that sequentially discovers LeetCode problems, confirms Rust support, assesses problem difficulty using TypeSafe Jev AI, synthesizes candidate solutions using Google Gemini Flash models with a bounded self-repair compiler loop, verifies code coverage, and publishes verified solutions directly to `main`.
+An autonomous, guarded pipeline that sequentially discovers LeetCode problems, confirms Rust support, assesses problem difficulty with [TypeSafe Jev](https://docs.typesafe.ai/introduction/coding-agents) (a model that returns typed scores with probabilities and confidence), synthesizes candidate solutions using Google Gemini Flash models with a bounded self-repair compiler loop, verifies code coverage, and publishes verified solutions directly to `main`.
 
 [![Build & Quality Gate](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/actions/workflows/build.yml/badge.svg)](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=marcelomiyake_autonomous-rust-leetcode-solver-pipeline&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=marcelomiyake_autonomous-rust-leetcode-solver-pipeline)
@@ -11,7 +11,7 @@ An autonomous, guarded pipeline that sequentially discovers LeetCode problems, c
 
 The pipeline is dispatched by cron-job.org daily at 04:17 UTC (01:17 in São Paulo) through GitHub `workflow_dispatch`. A yearly GitHub schedule remains as a fallback, and maintainers can trigger runs manually. The workflow handles everything from problem discovery to atomic repository updates without manual intervention.
 
-The repository currently contains authorized challenges and Rust solutions for problems 001–009. `state/progress.json` records the published sequence; consult it and the module registry for the current state as the pipeline advances.
+Each run publishes at most one problem, in LeetCode order. [`state/progress.json`](state/progress.json) records which problems are published or skipped, and [`src/problems/`](src/problems/) holds the published solutions.
 
 ```mermaid
 flowchart TD
@@ -193,7 +193,7 @@ When updating to a newer Flash model:
 ├── challenges/
 │   ├── README.md              # Challenge manifest schema and rules
 │   ├── bodies/                # Hydrated problem descriptions, examples, constraints
-│   └── 001-two-sum.json       # First authorized challenge manifest (the inbox currently includes 001–009)
+│   └── 001-two-sum.json       # Challenge manifest, one per problem
 ├── scripts/
 │   └── solver_pipeline.py     # Pure standard-library Python pipeline engine
 ├── src/
