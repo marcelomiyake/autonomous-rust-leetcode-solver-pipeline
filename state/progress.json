@@ -99,7 +99,12 @@
       "id": "020-valid-parentheses",
       "published_at": "2026-10-18T04:21:19Z",
       "commit": "46d3862c2bba4d78acad6b356cef30f13c20c31c"
+    },
+    {
+      "id": "021-merge-two-sorted-lists",
+      "published_at": "2026-10-19T04:18:48Z",
+      "commit": "937e06bb45f0fcf19515dac2b073d9653c4b3363"
     }
   ],
-  "updated_at": "2026-10-18T04:21:19Z"
+  "updated_at": "2026-10-19T04:18:48Z"
 }
