@@ -62,3 +62,6 @@ pub mod _020_valid_parentheses;
 
 #[path = "021_merge_two_sorted_lists.rs"]
 pub mod _021_merge_two_sorted_lists;
+
+#[path = "022_generate_parentheses.rs"]
+pub mod _022_generate_parentheses;

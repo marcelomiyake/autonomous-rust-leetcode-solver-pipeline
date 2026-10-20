@@ -1,0 +1,15 @@
+{
+  "id": "022-generate-parentheses",
+  "title": "Generate Parentheses",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-20",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/generate-parentheses/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-20",
+  "rust_signature": "pub fn generate_parenthesis(n: i32) -> Vec<String>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/022-generate-parentheses.json"
+  }
+}
