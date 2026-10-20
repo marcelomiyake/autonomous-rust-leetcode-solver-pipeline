@@ -104,7 +104,12 @@
       "id": "021-merge-two-sorted-lists",
       "published_at": "2026-10-19T04:18:48Z",
       "commit": "937e06bb45f0fcf19515dac2b073d9653c4b3363"
+    },
+    {
+      "id": "022-generate-parentheses",
+      "published_at": "2026-10-20T04:22:36Z",
+      "commit": "564d218dcf47a0b2826aae1c4762b73a938f1b40"
     }
   ],
-  "updated_at": "2026-10-19T04:18:48Z"
+  "updated_at": "2026-10-20T04:22:36Z"
 }
