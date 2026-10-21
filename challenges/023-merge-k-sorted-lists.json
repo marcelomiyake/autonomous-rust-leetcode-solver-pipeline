@@ -1,0 +1,15 @@
+{
+  "id": "023-merge-k-sorted-lists",
+  "title": "Merge k Sorted Lists",
+  "leetcode_difficulty": "hard",
+  "challenge_date": "2026-10-21",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/merge-k-sorted-lists/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-21",
+  "rust_signature": "pub fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/023-merge-k-sorted-lists.json"
+  }
+}
