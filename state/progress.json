@@ -109,7 +109,12 @@
       "id": "022-generate-parentheses",
       "published_at": "2026-10-20T04:22:36Z",
       "commit": "564d218dcf47a0b2826aae1c4762b73a938f1b40"
+    },
+    {
+      "id": "023-merge-k-sorted-lists",
+      "published_at": "2026-10-21T04:19:29Z",
+      "commit": "62ba70688b5a82af6bb2e391c4b14f3a21405670"
     }
   ],
-  "updated_at": "2026-10-20T04:22:36Z"
+  "updated_at": "2026-10-21T04:19:29Z"
 }
