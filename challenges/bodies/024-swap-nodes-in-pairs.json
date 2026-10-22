@@ -1,0 +1,12 @@
+{
+  "description": "Given a\u00a0linked list, swap every two adjacent nodes and return its head. You must solve the problem without\u00a0modifying the values in the list's nodes (i.e., only nodes themselves may be changed.)\n\nDefinition for singly-linked list.\n// #[derive(PartialEq, Eq, Clone, Debug)]\n// pub struct ListNode {\n//   pub val: i32,\n//   pub next: Option<Box<ListNode>>\n// }\n// \n// impl ListNode {\n//   #[inline]\n//   fn new(val: i32) -> Self {\n//     ListNode {\n//       next: None,\n//       val\n//     }\n//   }\n// }",
+  "constraints": [
+    "The number of nodes in the\u00a0list\u00a0is in the range [0, 100].",
+    "0 <= Node.val <= 100"
+  ],
+  "examples": [
+    {
+      "example": "See problem description"
+    }
+  ]
+}

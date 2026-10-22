@@ -68,3 +68,6 @@ pub mod _022_generate_parentheses;
 
 #[path = "023_merge_k_sorted_lists.rs"]
 pub mod _023_merge_k_sorted_lists;
+
+#[path = "024_swap_nodes_in_pairs.rs"]
+pub mod _024_swap_nodes_in_pairs;

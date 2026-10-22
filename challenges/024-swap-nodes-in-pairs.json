@@ -1,0 +1,15 @@
+{
+  "id": "024-swap-nodes-in-pairs",
+  "title": "Swap Nodes in Pairs",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-22",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/swap-nodes-in-pairs/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-22",
+  "rust_signature": "pub fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/024-swap-nodes-in-pairs.json"
+  }
+}
