@@ -114,7 +114,12 @@
       "id": "023-merge-k-sorted-lists",
       "published_at": "2026-10-21T04:19:29Z",
       "commit": "62ba70688b5a82af6bb2e391c4b14f3a21405670"
+    },
+    {
+      "id": "024-swap-nodes-in-pairs",
+      "published_at": "2026-10-22T04:23:43Z",
+      "commit": "48e108fcfdda00caa51246756e535930975d1d97"
     }
   ],
-  "updated_at": "2026-10-21T04:19:29Z"
+  "updated_at": "2026-10-22T04:23:43Z"
 }
