@@ -1,0 +1,11 @@
+{
+  "policy": "Use a Sonar project for each real component; retain existing aggregate history.",
+  "projects": [
+    {
+      "component": "pipeline",
+      "directory": "scripts",
+      "key": "marcelomiyake_autonomous-rust-leetcode-solver-pipeline_pipeline",
+      "kind": "python"
+    }
+  ]
+}
