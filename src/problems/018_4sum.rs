@@ -58,31 +58,35 @@ impl Solution {
                     continue;
                 }
 
-                let mut k = j + 1;
-                let mut l = n - 1;
-
-                while k < l {
-                    let sum = nums[i] as i64 + nums[j] as i64 + nums[k] as i64 + nums[l] as i64;
-                    if sum == target_i64 {
-                        res.push(vec![nums[i], nums[j], nums[k], nums[l]]);
-                        k += 1;
-                        l -= 1;
-                        while k < l && nums[k] == nums[k - 1] {
-                            k += 1;
-                        }
-                        while k < l && nums[l] == nums[l + 1] {
-                            l -= 1;
-                        }
-                    } else if sum < target_i64 {
-                        k += 1;
-                    } else {
-                        l -= 1;
-                    }
-                }
+                Self::collect_pairs(&nums, i, j, target_i64, &mut res);
             }
         }
 
         res
+    }
+
+    fn collect_pairs(nums: &[i32], i: usize, j: usize, target: i64, res: &mut Vec<Vec<i32>>) {
+        let mut k = j + 1;
+        let mut l = nums.len() - 1;
+
+        while k < l {
+            let sum = nums[i] as i64 + nums[j] as i64 + nums[k] as i64 + nums[l] as i64;
+            if sum == target {
+                res.push(vec![nums[i], nums[j], nums[k], nums[l]]);
+                k += 1;
+                l -= 1;
+                while k < l && nums[k] == nums[k - 1] {
+                    k += 1;
+                }
+                while k < l && nums[l] == nums[l + 1] {
+                    l -= 1;
+                }
+            } else if sum < target {
+                k += 1;
+            } else {
+                l -= 1;
+            }
+        }
     }
 }
 
@@ -112,5 +116,50 @@ mod tests {
         let target = -294967296;
         let expected: Vec<Vec<i32>> = vec![];
         assert_eq!(Solution::four_sum(nums, target), expected);
+    }
+
+    #[test]
+    fn test_short_input_and_unreachable_targets() {
+        assert!(Solution::four_sum(vec![1, 2, 3], 6).is_empty());
+        assert!(Solution::four_sum(vec![1, 2, 3, 4], 9).is_empty());
+        assert!(Solution::four_sum(vec![1, 2, 3, 4], 11).is_empty());
+    }
+
+    #[test]
+    fn test_duplicate_pairs_and_pointer_movement() {
+        assert_eq!(
+            Solution::four_sum(vec![-3, -2, -1, 0, 0, 1, 2, 3], 0),
+            vec![
+                vec![-3, -2, 2, 3],
+                vec![-3, -1, 1, 3],
+                vec![-3, 0, 0, 3],
+                vec![-3, 0, 1, 2],
+                vec![-2, -1, 0, 3],
+                vec![-2, -1, 1, 2],
+                vec![-2, 0, 0, 2],
+                vec![-1, 0, 0, 1],
+            ]
+        );
+        assert_eq!(
+            Solution::four_sum(vec![-2, -2, -2, 0, 0, 2, 2, 2], 0),
+            vec![vec![-2, -2, 2, 2], vec![-2, 0, 0, 2]]
+        );
+    }
+
+    #[test]
+    fn test_large_values_on_both_signs() {
+        assert!(Solution::four_sum(vec![-1_000_000_000; 4], 294_967_296).is_empty());
+        assert_eq!(
+            Solution::four_sum(
+                vec![-1_000_000_000, -1_000_000_000, 1_000_000_000, 1_000_000_000],
+                0,
+            ),
+            vec![vec![
+                -1_000_000_000,
+                -1_000_000_000,
+                1_000_000_000,
+                1_000_000_000
+            ]]
+        );
     }
 }
