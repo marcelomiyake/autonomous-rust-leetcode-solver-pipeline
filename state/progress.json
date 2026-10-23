@@ -119,7 +119,12 @@
       "id": "024-swap-nodes-in-pairs",
       "published_at": "2026-10-22T04:23:43Z",
       "commit": "48e108fcfdda00caa51246756e535930975d1d97"
+    },
+    {
+      "id": "025-reverse-nodes-in-k-group",
+      "published_at": "2026-10-23T04:22:39Z",
+      "commit": "3db69538d42daad78bc7cb948b782baa34af7709"
     }
   ],
-  "updated_at": "2026-10-22T04:23:43Z"
+  "updated_at": "2026-10-23T04:22:39Z"
 }
