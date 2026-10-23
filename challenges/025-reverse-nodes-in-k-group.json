@@ -1,0 +1,15 @@
+{
+  "id": "025-reverse-nodes-in-k-group",
+  "title": "Reverse Nodes in k-Group",
+  "leetcode_difficulty": "hard",
+  "challenge_date": "2026-10-23",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/reverse-nodes-in-k-group/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-23",
+  "rust_signature": "pub fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/025-reverse-nodes-in-k-group.json"
+  }
+}
