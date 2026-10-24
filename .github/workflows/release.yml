@@ -8,6 +8,14 @@ name: Release
 on:
   push:
     branches: [main]
+  # The solver publishes to main with the workflow token, and a push made
+  # with that token starts no other workflow, so each finished solver run
+  # starts this one as well.
+  workflow_run:
+    workflows: [Generate LeetCode solution candidate]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
 
 permissions: {}
 
@@ -20,8 +28,9 @@ jobs:
   release-please:
     name: Release pull request, tag and GitHub release
     runs-on: ubuntu-latest
-    # The write scopes stay on this job, which runs only for pushes to main,
-    # never for pull requests. It checks out and runs none of the code.
+    # The write scopes stay on this job, which runs only for main (a push,
+    # a finished solver run or a manual run), never for pull requests. It
+    # checks out and runs none of the code.
     permissions:
       contents: write
       issues: write

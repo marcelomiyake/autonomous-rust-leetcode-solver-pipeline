@@ -58,6 +58,6 @@ These instructions apply to the entire repository. Read `README.md` before chang
 - It writes the version to `Cargo.toml` and `Cargo.lock` and adds the release to `CHANGELOG.md`.
 - Merging it tags `vX.Y.Z` and publishes the GitHub release.
 - GitHub runs no workflow on that pull request, because the workflow's own token opened it. The other workflows run on `main` once it merges.
-- The solver pipeline commits each published solution to `main` as a `feat` commit, so the release pull request gathers them until it is merged.
+- The solver pipeline commits each published solution to `main` as a `feat` commit. It pushes with the workflow token, which starts no push workflow, so the release workflow also runs whenever a solver run finishes. The release pull request gathers the solutions until it is merged.
 
 Never change the version or `CHANGELOG.md` by hand. `.release-please-manifest.json` holds the last released version, and `release-please-config.json` the settings. To force a version, add a `Release-As: X.Y.Z` footer to a commit.
