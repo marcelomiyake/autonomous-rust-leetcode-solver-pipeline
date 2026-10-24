@@ -124,7 +124,12 @@
       "id": "025-reverse-nodes-in-k-group",
       "published_at": "2026-10-23T04:22:39Z",
       "commit": "3db69538d42daad78bc7cb948b782baa34af7709"
+    },
+    {
+      "id": "026-remove-duplicates-from-sorted-array",
+      "published_at": "2026-10-24T04:21:58Z",
+      "commit": "5164c76d7212f2be1ff60652a217c9c7a817f519"
     }
   ],
-  "updated_at": "2026-10-23T04:22:39Z"
+  "updated_at": "2026-10-24T04:21:58Z"
 }
