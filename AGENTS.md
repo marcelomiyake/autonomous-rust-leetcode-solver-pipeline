@@ -49,3 +49,15 @@ These instructions apply to the entire repository. Read `README.md` before chang
 - All commit messages must follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/): `<type>[optional scope]: <description>`. Use `feat` for new features, `fix` for bug fixes, and an appropriate type such as `docs`, `test`, `ci`, `refactor`, or `chore` for other changes.
 - Add an optional body after a blank line when the reason or context needs explanation. Mark breaking changes with `!` before the colon or a `BREAKING CHANGE: <description>` footer.
 - Example: `docs: add contributor instructions`.
+
+## Releases
+
+`.github/workflows/release.yml` runs [release-please](https://github.com/googleapis/release-please) on every push to `main`. From the Conventional Commits merged since the last tag, it keeps one release pull request open, titled `chore: release X.Y.Z`:
+
+- `fix`, `perf` and `revert` make a patch release, `feat` a minor release, and a breaking change (`!`) a major release. The other types release nothing on their own and stay out of the changelog.
+- It writes the version to `Cargo.toml` and `Cargo.lock` and adds the release to `CHANGELOG.md`.
+- Merging it tags `vX.Y.Z` and publishes the GitHub release.
+- GitHub runs no workflow on that pull request, because the workflow's own token opened it. The other workflows run on `main` once it merges.
+- The solver pipeline commits each published solution to `main` as a `feat` commit, so the release pull request gathers them until it is merged.
+
+Never change the version or `CHANGELOG.md` by hand. `.release-please-manifest.json` holds the last released version, and `release-please-config.json` the settings. To force a version, add a `Release-As: X.Y.Z` footer to a commit.
