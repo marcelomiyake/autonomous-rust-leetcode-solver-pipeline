@@ -1,0 +1,15 @@
+{
+  "id": "026-remove-duplicates-from-sorted-array",
+  "title": "Remove Duplicates from Sorted Array",
+  "leetcode_difficulty": "easy",
+  "challenge_date": "2026-10-24",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-24",
+  "rust_signature": "pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/026-remove-duplicates-from-sorted-array.json"
+  }
+}

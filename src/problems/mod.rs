@@ -74,3 +74,6 @@ pub mod _024_swap_nodes_in_pairs;
 
 #[path = "025_reverse_nodes_in_k_group.rs"]
 pub mod _025_reverse_nodes_in_k_group;
+
+#[path = "026_remove_duplicates_from_sorted_array.rs"]
+pub mod _026_remove_duplicates_from_sorted_array;
