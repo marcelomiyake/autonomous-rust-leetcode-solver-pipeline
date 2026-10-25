@@ -77,3 +77,6 @@ pub mod _025_reverse_nodes_in_k_group;
 
 #[path = "026_remove_duplicates_from_sorted_array.rs"]
 pub mod _026_remove_duplicates_from_sorted_array;
+
+#[path = "027_remove_element.rs"]
+pub mod _027_remove_element;
