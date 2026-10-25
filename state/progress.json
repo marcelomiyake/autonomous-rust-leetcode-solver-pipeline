@@ -129,7 +129,12 @@
       "id": "026-remove-duplicates-from-sorted-array",
       "published_at": "2026-10-24T04:21:58Z",
       "commit": "5164c76d7212f2be1ff60652a217c9c7a817f519"
+    },
+    {
+      "id": "027-remove-element",
+      "published_at": "2026-10-25T04:23:07Z",
+      "commit": "61165567c9faccd2e649d54d7f65005bb398f4c0"
     }
   ],
-  "updated_at": "2026-10-24T04:21:58Z"
+  "updated_at": "2026-10-25T04:23:07Z"
 }
