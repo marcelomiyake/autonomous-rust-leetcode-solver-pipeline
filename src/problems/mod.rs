@@ -80,3 +80,6 @@ pub mod _026_remove_duplicates_from_sorted_array;
 
 #[path = "027_remove_element.rs"]
 pub mod _027_remove_element;
+
+#[path = "028_find_the_index_of_the_first_occurrence_in_a_string.rs"]
+pub mod _028_find_the_index_of_the_first_occurrence_in_a_string;

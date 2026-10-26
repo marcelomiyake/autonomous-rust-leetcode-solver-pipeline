@@ -1,0 +1,15 @@
+{
+  "id": "028-find-the-index-of-the-first-occurrence-in-a-string",
+  "title": "Find the Index of the First Occurrence in a String",
+  "leetcode_difficulty": "easy",
+  "challenge_date": "2026-10-26",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-26",
+  "rust_signature": "pub fn str_str(haystack: String, needle: String) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/028-find-the-index-of-the-first-occurrence-in-a-string.json"
+  }
+}
