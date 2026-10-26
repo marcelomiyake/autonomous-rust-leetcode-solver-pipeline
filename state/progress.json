@@ -134,7 +134,12 @@
       "id": "027-remove-element",
       "published_at": "2026-10-25T04:23:07Z",
       "commit": "61165567c9faccd2e649d54d7f65005bb398f4c0"
+    },
+    {
+      "id": "028-find-the-index-of-the-first-occurrence-in-a-string",
+      "published_at": "2026-10-26T04:27:38Z",
+      "commit": "4e3407e580d43314a7958bb6f0f5acb9b8c744a4"
     }
   ],
-  "updated_at": "2026-10-25T04:23:07Z"
+  "updated_at": "2026-10-26T04:27:38Z"
 }
