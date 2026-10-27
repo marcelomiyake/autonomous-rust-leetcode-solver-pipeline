@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.0.0...v1.1.0) (2026-10-27)
+
+
+### Features
+
+* add LeetCode 027-remove-element solution ([6116556](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/61165567c9faccd2e649d54d7f65005bb398f4c0))
+* add LeetCode 028-find-the-index-of-the-first-occurrence-in-a-string solution ([4e3407e](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/4e3407e580d43314a7958bb6f0f5acb9b8c744a4))
+* add LeetCode 029-divide-two-integers solution ([abfba90](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/abfba90ad9de2d903e26ed6f75d2fbc4d162a124))
+
 ## [1.0.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v0.1.0...v1.0.0) (2026-10-24)
 
 
