@@ -1,6 +1,6 @@
 [package]
 name = "autonomous-rust-leetcode-solver-pipeline"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2024"
 license = "MIT"
 description = "Rust solutions for the autonomous LeetCode solver pipeline"
