@@ -83,3 +83,6 @@ pub mod _027_remove_element;
 
 #[path = "028_find_the_index_of_the_first_occurrence_in_a_string.rs"]
 pub mod _028_find_the_index_of_the_first_occurrence_in_a_string;
+
+#[path = "029_divide_two_integers.rs"]
+pub mod _029_divide_two_integers;

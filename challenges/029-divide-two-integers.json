@@ -1,0 +1,15 @@
+{
+  "id": "029-divide-two-integers",
+  "title": "Divide Two Integers",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-27",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/divide-two-integers/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-27",
+  "rust_signature": "pub fn divide(dividend: i32, divisor: i32) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/029-divide-two-integers.json"
+  }
+}
