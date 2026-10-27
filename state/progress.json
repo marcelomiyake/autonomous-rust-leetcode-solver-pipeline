@@ -139,7 +139,12 @@
       "id": "028-find-the-index-of-the-first-occurrence-in-a-string",
       "published_at": "2026-10-26T04:27:38Z",
       "commit": "4e3407e580d43314a7958bb6f0f5acb9b8c744a4"
+    },
+    {
+      "id": "029-divide-two-integers",
+      "published_at": "2026-10-27T04:22:04Z",
+      "commit": "abfba90ad9de2d903e26ed6f75d2fbc4d162a124"
     }
   ],
-  "updated_at": "2026-10-26T04:27:38Z"
+  "updated_at": "2026-10-27T04:22:04Z"
 }
