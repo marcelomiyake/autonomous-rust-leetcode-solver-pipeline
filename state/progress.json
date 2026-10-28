@@ -144,7 +144,12 @@
       "id": "029-divide-two-integers",
       "published_at": "2026-10-27T04:22:04Z",
       "commit": "abfba90ad9de2d903e26ed6f75d2fbc4d162a124"
+    },
+    {
+      "id": "030-substring-with-concatenation-of-all-words",
+      "published_at": "2026-10-28T04:20:22Z",
+      "commit": "036acd63dd9536047b0402cca30e1b20d3816124"
     }
   ],
-  "updated_at": "2026-10-27T04:22:04Z"
+  "updated_at": "2026-10-28T04:20:22Z"
 }
