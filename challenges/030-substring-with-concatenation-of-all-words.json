@@ -1,0 +1,15 @@
+{
+  "id": "030-substring-with-concatenation-of-all-words",
+  "title": "Substring with Concatenation of All Words",
+  "leetcode_difficulty": "hard",
+  "challenge_date": "2026-10-28",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/substring-with-concatenation-of-all-words/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-28",
+  "rust_signature": "pub fn find_substring(s: String, words: Vec<String>) -> Vec<i32>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/030-substring-with-concatenation-of-all-words.json"
+  }
+}

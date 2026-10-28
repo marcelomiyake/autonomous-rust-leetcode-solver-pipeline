@@ -86,3 +86,6 @@ pub mod _028_find_the_index_of_the_first_occurrence_in_a_string;
 
 #[path = "029_divide_two_integers.rs"]
 pub mod _029_divide_two_integers;
+
+#[path = "030_substring_with_concatenation_of_all_words.rs"]
+pub mod _030_substring_with_concatenation_of_all_words;
