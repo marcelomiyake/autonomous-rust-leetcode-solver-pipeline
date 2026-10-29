@@ -149,7 +149,12 @@
       "id": "030-substring-with-concatenation-of-all-words",
       "published_at": "2026-10-28T04:20:22Z",
       "commit": "036acd63dd9536047b0402cca30e1b20d3816124"
+    },
+    {
+      "id": "031-next-permutation",
+      "published_at": "2026-10-29T04:27:14Z",
+      "commit": "a07de7d86a3b8448f844e7d60a02bd80eead5581"
     }
   ],
-  "updated_at": "2026-10-28T04:20:22Z"
+  "updated_at": "2026-10-29T04:27:14Z"
 }
