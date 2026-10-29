@@ -89,3 +89,6 @@ pub mod _029_divide_two_integers;
 
 #[path = "030_substring_with_concatenation_of_all_words.rs"]
 pub mod _030_substring_with_concatenation_of_all_words;
+
+#[path = "031_next_permutation.rs"]
+pub mod _031_next_permutation;

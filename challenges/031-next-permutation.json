@@ -1,0 +1,15 @@
+{
+  "id": "031-next-permutation",
+  "title": "Next Permutation",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-29",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/next-permutation/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-29",
+  "rust_signature": "pub fn next_permutation(nums: &mut Vec<i32>)",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/031-next-permutation.json"
+  }
+}
