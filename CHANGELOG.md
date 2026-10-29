@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.1.0...v1.2.0) (2026-10-29)
+
+
+### Features
+
+* add LeetCode 030-substring-with-concatenation-of-all-words solution ([036acd6](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/036acd63dd9536047b0402cca30e1b20d3816124))
+* add LeetCode 031-next-permutation solution ([a07de7d](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/a07de7d86a3b8448f844e7d60a02bd80eead5581))
+
 ## [1.1.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.0.0...v1.1.0) (2026-10-27)
 
 
