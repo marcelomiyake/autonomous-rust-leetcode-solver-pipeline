@@ -92,3 +92,6 @@ pub mod _030_substring_with_concatenation_of_all_words;
 
 #[path = "031_next_permutation.rs"]
 pub mod _031_next_permutation;
+
+#[path = "032_longest_valid_parentheses.rs"]
+pub mod _032_longest_valid_parentheses;

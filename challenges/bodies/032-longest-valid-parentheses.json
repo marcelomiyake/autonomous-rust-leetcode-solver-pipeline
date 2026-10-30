@@ -1,0 +1,21 @@
+{
+  "description": "Given a string containing just the characters '(' and ')', return the length of the longest valid (well-formed) parentheses substring.",
+  "constraints": [
+    "0 <= s.length <= 3 * 104",
+    "s[i] is '(', or ')'."
+  ],
+  "examples": [
+    {
+      "input": "s = \"(()\"",
+      "output": "2"
+    },
+    {
+      "input": "s = \")()())\"",
+      "output": "4"
+    },
+    {
+      "input": "s = \"\"",
+      "output": "0"
+    }
+  ]
+}

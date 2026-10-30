@@ -1,0 +1,15 @@
+{
+  "id": "032-longest-valid-parentheses",
+  "title": "Longest Valid Parentheses",
+  "leetcode_difficulty": "hard",
+  "challenge_date": "2026-10-30",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/longest-valid-parentheses/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-30",
+  "rust_signature": "pub fn longest_valid_parentheses(s: String) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/032-longest-valid-parentheses.json"
+  }
+}
