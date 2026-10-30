@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.2.0...v1.3.0) (2026-10-30)
+
+
+### Features
+
+* add LeetCode 032-longest-valid-parentheses solution ([2750ff7](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/2750ff7c835898eff87f60ced6fe5798930de204))
+
 ## [1.2.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.1.0...v1.2.0) (2026-10-29)
 
 
