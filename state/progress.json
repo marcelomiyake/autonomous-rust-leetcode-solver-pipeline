@@ -154,7 +154,12 @@
       "id": "031-next-permutation",
       "published_at": "2026-10-29T04:27:14Z",
       "commit": "a07de7d86a3b8448f844e7d60a02bd80eead5581"
+    },
+    {
+      "id": "032-longest-valid-parentheses",
+      "published_at": "2026-10-30T04:21:50Z",
+      "commit": "2750ff7c835898eff87f60ced6fe5798930de204"
     }
   ],
-  "updated_at": "2026-10-29T04:27:14Z"
+  "updated_at": "2026-10-30T04:21:50Z"
 }
