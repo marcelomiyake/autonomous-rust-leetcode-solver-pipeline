@@ -1,0 +1,74 @@
+name: Auto-merge pull requests
+
+on:
+  workflow_run:
+    workflows: [Build, SonarCloud component analysis]
+    types: [completed]
+  pull_request_target:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions: {}
+
+concurrency:
+  group: auto-merge
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+      statuses: read
+      actions: write
+    steps:
+      # This privileged workflow runs no PR code and consumes no artifacts.
+      - name: Merge PRs whose current commits passed all checks
+        id: merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh pr list --state open --base main --limit 1000 \
+            --json number,headRefOid,isDraft,title > "$RUNNER_TEMP/open-prs.json"
+          while IFS=$'\t' read -r number sha; do
+            if ! checks="$(gh pr checks "$number" --json name,bucket,workflow)"; then
+              continue
+            fi
+            # Empty, missing, skipped, pending, cancelled or failed checks
+            # must never qualify. Require both repository CI workflows.
+            if ! jq -e '
+              any(.[]; .workflow == "Build" and .name == "SonarQube" and .bucket == "pass") and
+              any(.[]; .workflow == "SonarCloud component analysis" and .name == "analyze" and .bucket == "pass") and
+              all(.[]; .bucket == "pass")
+            ' <<< "$checks" > /dev/null; then
+              continue
+            fi
+            review="$(gh pr view "$number" --json reviewDecision --jq .reviewDecision)"
+            if [ "$review" = 'CHANGES_REQUESTED' ] || [ "$review" = 'REVIEW_REQUIRED' ]; then
+              continue
+            fi
+            # GitHub enforces branch protections and conversation resolution;
+            # the SHA guard rejects a PR updated since it was inspected.
+            if gh pr merge "$number" --squash --match-head-commit "$sha"; then
+              echo 'merged=true' >> "$GITHUB_OUTPUT"
+            else
+              echo "::warning::PR #$number could not be merged; leaving it open for a later run."
+            fi
+          done < <(jq -r '
+            .[] | select(.isDraft == false) |
+            select(.title | test("^(feat|fix|perf|revert|docs|test|ci|refactor|chore|build|style)(\\([^\\r\\n]+\\))?!?: .+")) |
+            [.number, .headRefOid] | @tsv
+          ' "$RUNNER_TEMP/open-prs.json")
+      # GITHUB_TOKEN merges do not emit a push workflow run. Explicitly
+      # dispatch release reconciliation, also recovering a prior failed run.
+      - name: Reconcile releases
+        if: steps.merge.outputs.merged == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh workflow run release.yml --ref main

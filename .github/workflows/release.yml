@@ -2,7 +2,8 @@ name: Release
 
 # release-please reads the Conventional Commits merged into main and keeps
 # one release pull request open: it writes the new version to Cargo.toml and
-# Cargo.lock and adds the release to CHANGELOG.md. Merging that pull request
+# Cargo.lock and adds the release to CHANGELOG.md. That pull request
+# is validated and squash-merged automatically before release-please
 # tags vX.Y.Z and publishes the GitHub release. fix:, perf: and revert: are
 # a patch, feat: a minor, and a breaking change (!) a major.
 on:
@@ -26,17 +27,97 @@ concurrency:
 
 jobs:
   release-please:
-    name: Release pull request, tag and GitHub release
+    name: Prepare release pull request
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
-    # The write scopes stay on this job, which runs only for main (a push,
-    # a finished solver run or a manual run), never for pull requests. It
-    # checks out and runs none of the code.
+    # Only preparation and publication receive write scopes. Neither job
+    # checks out code; validation runs separately with read-only scopes.
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    outputs:
+      number: ${{ steps.pr.outputs.number }}
+      sha: ${{ steps.pr.outputs.sha }}
+      branch: ${{ steps.pr.outputs.branch }}
+    steps:
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          target-branch: main
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+      - name: Resolve the current release PR, including unchanged retries
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh pr list --state open --base main \
+            --head release-please--branches--main--components--autonomous-rust-leetcode-solver-pipeline \
+            --author 'github-actions[bot]' --label 'autorelease: pending' \
+            --json number,headRefOid,headRefName,isDraft > "$RUNNER_TEMP/release-pr.json"
+          jq -e 'length <= 1 and all(.[]; .isDraft == false)' "$RUNNER_TEMP/release-pr.json"
+          jq -r '.[] | "number=\(.number)\nsha=\(.headRefOid)\nbranch=\(.headRefName)"' \
+            "$RUNNER_TEMP/release-pr.json" >> "$GITHUB_OUTPUT"
+
+  validate-rust:
+    name: Validate release Rust and coverage
+    needs: release-please
+    if: needs.release-please.outputs.number != ''
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build.yml
+    with:
+      ref: ${{ needs.release-please.outputs.sha }}
+      pr-number: ${{ needs.release-please.outputs.number }}
+      pr-branch: ${{ needs.release-please.outputs.branch }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  validate-pipeline:
+    name: Validate release pipeline analysis
+    needs: release-please
+    if: needs.release-please.outputs.number != ''
+    permissions:
+      contents: read
+    uses: ./.github/workflows/sonarcloud-components.yml
+    with:
+      ref: ${{ needs.release-please.outputs.sha }}
+      pr-number: ${{ needs.release-please.outputs.number }}
+      pr-branch: ${{ needs.release-please.outputs.branch }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  publish:
+    name: Merge validated release PR and publish
+    needs: [release-please, validate-rust, validate-pipeline]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       issues: write
       pull-requests: write
     steps:
+      - name: Squash-merge the validated release commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ needs.release-please.outputs.number }}
+          PR_SHA: ${{ needs.release-please.outputs.sha }}
+        run: |
+          set -euo pipefail
+          gh pr view "$PR_NUMBER" --json baseRefName,isDraft,reviewDecision | jq -e '
+            .baseRefName == "main" and .isDraft == false and
+            .reviewDecision != "CHANGES_REQUESTED" and .reviewDecision != "REVIEW_REQUIRED"
+          '
+          gh pr merge "$PR_NUMBER" --squash --match-head-commit "$PR_SHA"
+      # A merge using GITHUB_TOKEN does not trigger push workflows. Run
+      # release-please again here to create the tag and GitHub release now.
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
+          target-branch: main
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          skip-github-pull-request: true

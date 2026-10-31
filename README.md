@@ -189,7 +189,10 @@ When updating to a newer Flash model:
 ├── .github/
 │   └── workflows/
 │       ├── build.yml                 # CI: Rust checks, LCOV coverage, and SonarQube Cloud scan
-│       └── leetcode-solver.yml       # Dispatchable solver, validation, and publication
+│       ├── leetcode-solver.yml       # Dispatchable solver, validation, and publication
+│       ├── auto-merge.yml            # Squash-merge PRs after all checks pass
+│       ├── release.yml               # Validate and merge release PRs, then publish releases
+│       └── sonarcloud-components.yml # Pipeline component analysis
 ├── challenges/
 │   ├── README.md              # Challenge manifest schema and rules
 │   ├── bodies/                # Hydrated problem descriptions, examples, constraints
@@ -216,6 +219,24 @@ When updating to a newer Flash model:
 
 ---
 
+## Automatic PR Merging & Releases
+
+Every non-draft PR targeting `main` is eligible for automatic squash merging after both the **Build / SonarQube** and **SonarCloud component analysis / analyze** jobs succeed and every reported check passes. PR titles must follow Conventional Commits because the title becomes the squash commit message. Failed, pending, cancelled, skipped, or missing checks leave the PR open. Requested changes, required reviews, unresolved conversations, conflicts, and branch protections can also prevent merging; the workflow never bypasses them. Fork PRs whose Sonar scans are skipped remain open for maintainer handling.
+
+The `auto-merge.yml` workflow reevaluates open PRs when CI finishes or a PR is opened, updated, reopened, edited, or marked ready. It executes no PR code, uses no artifacts, and pins each merge to the inspected head SHA. A subsequent PR update requires fresh passing checks. After a successful merge, it explicitly dispatches `release.yml`, since merges using `GITHUB_TOKEN` do not trigger push workflows. This automation uses direct merges after validation and does not require GitHub's repository-level auto-merge setting.
+
+`release.yml` runs on pushes to `main`, successful solver runs, or manual dispatches on `main`. [Release Please](https://github.com/googleapis/release-please-action) uses Conventional Commits to maintain the version, changelog, and one release PR. For each release PR, the workflow calls both CI workflows directly against its exact head commit with read-only repository permissions, including Rust formatting, check, tests, Clippy, LCOV coverage, and both SonarCloud Quality Gates. This direct validation avoids relying on automatic PR workflow execution for PRs created with `GITHUB_TOKEN`.
+
+After both validation jobs pass, a separate job squash-merges that exact release commit and immediately runs release-please again to create the `vX.Y.Z` tag and publish the GitHub release. Validation failure leaves the PR open; a manual rerun also discovers an unchanged release PR so it can retry. Release processing is serialized by the `release` concurrency group. No extra token is needed: the workflows use `GITHUB_TOKEN` for GitHub operations and the existing `SONAR_TOKEN` only for analysis.
+
+Never edit `Cargo.toml`'s version, `Cargo.lock`'s version, `.release-please-manifest.json`, or `CHANGELOG.md` manually. Release Please manages them. After the workflows are merged into `main`, the existing release PR is picked up automatically by the next release run, or immediately with:
+
+```sh
+gh workflow run release.yml --ref main
+```
+
+---
+
 ## Secrets & External Integrations
 
 | Secret | Service | Purpose | Exposure Policy |
@@ -230,6 +251,7 @@ When updating to a newer Flash model:
 ## Local Development & Verification
 
 The pipeline engine uses Python 3 standard library exclusively (no external `pip` dependencies required).
+The workflow automation tests also require `bash` and `jq`, both included on GitHub's Ubuntu runners.
 
 ### Run Pipeline Tests
 ```sh

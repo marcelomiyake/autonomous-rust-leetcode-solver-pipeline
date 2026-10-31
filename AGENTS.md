@@ -56,8 +56,9 @@ These instructions apply to the entire repository. Read `README.md` before chang
 
 - `fix`, `perf` and `revert` make a patch release, `feat` a minor release, and a breaking change (`!`) a major release. The other types release nothing on their own and stay out of the changelog.
 - It writes the version to `Cargo.toml` and `Cargo.lock` and adds the release to `CHANGELOG.md`.
-- Merging it tags `vX.Y.Z` and publishes the GitHub release.
-- GitHub runs no workflow on that pull request, because the workflow's own token opened it. The other workflows run on `main` once it merges.
-- The solver pipeline commits each published solution to `main` as a `feat` commit. It pushes with the workflow token, which starts no push workflow, so the release workflow also runs whenever a solver run finishes. The release pull request gathers the solutions until it is merged.
+- The release workflow calls both CI workflows against the exact release PR head commit, then squash-merges it only after both pass. It runs release-please again in the same run to tag `vX.Y.Z` and publish the GitHub release, because a merge with the workflow token starts no push workflow.
+- Do not rely on automatic PR workflow execution for release PRs created with `GITHUB_TOKEN`; use the direct reusable workflow calls. Keep validation jobs read-only and separate from the merge/publish job.
+- The solver pipeline commits each published solution to `main` as a `feat` commit. It pushes with the workflow token, which starts no push workflow, so the release workflow also runs whenever a solver run succeeds. Failed validation leaves the release PR open and retryable through manual dispatch.
+- `.github/workflows/auto-merge.yml` also squash-merges other non-draft PRs targeting `main` after both CI jobs and every reported check pass. Require Conventional Commit PR titles, honor review decisions and branch protections, pin merges to the checked head SHA, and never execute PR code in the privileged merge workflow. Explicitly dispatch the release workflow after these token-authenticated merges.
 
 Never change the version or `CHANGELOG.md` by hand. `.release-please-manifest.json` holds the last released version, and `release-please-config.json` the settings. To force a version, add a `Release-As: X.Y.Z` footer to a commit.

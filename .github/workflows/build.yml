@@ -5,6 +5,23 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_call:
+    inputs:
+      ref:
+        description: Immutable release PR commit to validate
+        required: true
+        type: string
+      pr-number:
+        required: true
+        type: string
+      pr-branch:
+        required: true
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        required: true
+permissions:
+  contents: read
 jobs:
   sonarqube:
     name: SonarQube
@@ -12,6 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
+          ref: ${{ inputs.ref || github.ref }}
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
           persist-credentials: false
       - name: Install LLVM coverage tools
@@ -20,6 +38,8 @@ jobs:
           cargo install cargo-llvm-cov --locked
       - name: Check formatting
         run: cargo fmt --all -- --check
+      - name: Run pipeline and automation tests
+        run: python3 -m unittest discover -s tests -v
       - name: Check Rust code
         run: cargo check --locked --all-targets --all-features
       - name: Run Rust tests
@@ -43,5 +63,7 @@ jobs:
       - name: SonarQube Scan
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
+        with:
+          args: ${{ inputs.pr-number && format('-Dsonar.pullrequest.key={0} -Dsonar.pullrequest.branch={1} -Dsonar.pullrequest.base=main', inputs.pr-number, inputs.pr-branch) || '' }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

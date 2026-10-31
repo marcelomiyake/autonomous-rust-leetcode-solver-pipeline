@@ -251,8 +251,9 @@ mod tests {
 }
 """
         validate_model_output({"rust_source": source}, VALID_CHALLENGE["rust_signature"])
+        forbidden_source = source.replace("value }", "unsafe { value }", 1)
         with self.assertRaisesRegex(RuntimeError, "forbidden"):
-            validate_model_output({"rust_source": source.replace("value }", "unsafe { value }", 1)})
+            validate_model_output({"rust_source": forbidden_source})
         standalone = source.replace(
             "impl Solution {\n    pub fn solve(value: i32) -> i32 { value }\n}",
             "pub fn solve(value: i32) -> i32 { value }",
