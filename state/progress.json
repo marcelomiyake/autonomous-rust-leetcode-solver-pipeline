@@ -159,7 +159,12 @@
       "id": "032-longest-valid-parentheses",
       "published_at": "2026-10-30T04:21:50Z",
       "commit": "2750ff7c835898eff87f60ced6fe5798930de204"
+    },
+    {
+      "id": "033-search-in-rotated-sorted-array",
+      "published_at": "2026-10-31T04:24:10Z",
+      "commit": "227ada59363f9a709830700b24daf94011181eef"
     }
   ],
-  "updated_at": "2026-10-30T04:21:50Z"
+  "updated_at": "2026-10-31T04:24:10Z"
 }
