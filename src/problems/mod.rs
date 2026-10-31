@@ -95,3 +95,6 @@ pub mod _031_next_permutation;
 
 #[path = "032_longest_valid_parentheses.rs"]
 pub mod _032_longest_valid_parentheses;
+
+#[path = "033_search_in_rotated_sorted_array.rs"]
+pub mod _033_search_in_rotated_sorted_array;

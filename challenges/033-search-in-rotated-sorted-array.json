@@ -1,0 +1,15 @@
+{
+  "id": "033-search-in-rotated-sorted-array",
+  "title": "Search in Rotated Sorted Array",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-10-31",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/search-in-rotated-sorted-array/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-10-31",
+  "rust_signature": "pub fn search(nums: Vec<i32>, target: i32) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/033-search-in-rotated-sorted-array.json"
+  }
+}
