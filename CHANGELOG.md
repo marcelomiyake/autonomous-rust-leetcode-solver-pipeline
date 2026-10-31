@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.3.0...v1.4.0) (2026-10-31)
+
+
+### Features
+
+* add LeetCode 033-search-in-rotated-sorted-array solution ([227ada5](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/227ada59363f9a709830700b24daf94011181eef))
+
 ## [1.3.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.2.0...v1.3.0) (2026-10-30)
 
 
