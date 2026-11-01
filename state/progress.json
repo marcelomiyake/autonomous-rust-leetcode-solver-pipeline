@@ -164,7 +164,12 @@
       "id": "033-search-in-rotated-sorted-array",
       "published_at": "2026-10-31T04:24:10Z",
       "commit": "227ada59363f9a709830700b24daf94011181eef"
+    },
+    {
+      "id": "034-find-first-and-last-position-of-element-in-sorted-array",
+      "published_at": "2026-11-01T04:21:24Z",
+      "commit": "990718c9433bb4c0f12f124b7292eac5e519eb0b"
     }
   ],
-  "updated_at": "2026-10-31T04:24:10Z"
+  "updated_at": "2026-11-01T04:21:24Z"
 }
