@@ -1,0 +1,23 @@
+{
+  "description": "Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value.\n\nIf target is not found in the array, return [-1, -1].\n\nYou must\u00a0write an algorithm with\u00a0O(log n) runtime complexity.",
+  "constraints": [
+    "0 <= nums.length <= 105",
+    "-109\u00a0<= nums[i]\u00a0<= 109",
+    "nums is a non-decreasing array.",
+    "-109\u00a0<= target\u00a0<= 109"
+  ],
+  "examples": [
+    {
+      "input": "nums = [5,7,7,8,8,10], target = 8",
+      "output": "[3,4]"
+    },
+    {
+      "input": "nums = [5,7,7,8,8,10], target = 6",
+      "output": "[-1,-1]"
+    },
+    {
+      "input": "nums = [], target = 0",
+      "output": "[-1,-1]"
+    }
+  ]
+}
