@@ -1,0 +1,15 @@
+{
+  "id": "035-search-insert-position",
+  "title": "Search Insert Position",
+  "leetcode_difficulty": "easy",
+  "challenge_date": "2026-11-02",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/search-insert-position/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-02",
+  "rust_signature": "pub fn search_insert(nums: Vec<i32>, target: i32) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/035-search-insert-position.json"
+  }
+}

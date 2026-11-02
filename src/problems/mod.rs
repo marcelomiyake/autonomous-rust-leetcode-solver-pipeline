@@ -101,3 +101,6 @@ pub mod _033_search_in_rotated_sorted_array;
 
 #[path = "034_find_first_and_last_position_of_element_in_sorted_array.rs"]
 pub mod _034_find_first_and_last_position_of_element_in_sorted_array;
+
+#[path = "035_search_insert_position.rs"]
+pub mod _035_search_insert_position;
