@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.4.0...v1.5.0) (2026-11-02)
+
+
+### Features
+
+* add LeetCode 034-find-first-and-last-position-of-element-in-sorted-array solution ([990718c](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/990718c9433bb4c0f12f124b7292eac5e519eb0b))
+* add LeetCode 035-search-insert-position solution ([39e677d](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/39e677d9a87fb9c00696a7f1be10dbde05602905))
+
 ## [1.4.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.3.0...v1.4.0) (2026-10-31)
 
 
