@@ -169,7 +169,12 @@
       "id": "034-find-first-and-last-position-of-element-in-sorted-array",
       "published_at": "2026-11-01T04:21:24Z",
       "commit": "990718c9433bb4c0f12f124b7292eac5e519eb0b"
+    },
+    {
+      "id": "035-search-insert-position",
+      "published_at": "2026-11-02T04:21:23Z",
+      "commit": "39e677d9a87fb9c00696a7f1be10dbde05602905"
     }
   ],
-  "updated_at": "2026-11-01T04:21:24Z"
+  "updated_at": "2026-11-02T04:21:23Z"
 }
