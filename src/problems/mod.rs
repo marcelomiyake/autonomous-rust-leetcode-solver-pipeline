@@ -104,3 +104,6 @@ pub mod _034_find_first_and_last_position_of_element_in_sorted_array;
 
 #[path = "035_search_insert_position.rs"]
 pub mod _035_search_insert_position;
+
+#[path = "036_valid_sudoku.rs"]
+pub mod _036_valid_sudoku;

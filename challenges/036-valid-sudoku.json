@@ -1,0 +1,15 @@
+{
+  "id": "036-valid-sudoku",
+  "title": "Valid Sudoku",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-03",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/valid-sudoku/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-03",
+  "rust_signature": "pub fn is_valid_sudoku(board: Vec<Vec<char>>) -> bool",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/036-valid-sudoku.json"
+  }
+}
