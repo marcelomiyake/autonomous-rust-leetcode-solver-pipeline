@@ -107,3 +107,6 @@ pub mod _035_search_insert_position;
 
 #[path = "036_valid_sudoku.rs"]
 pub mod _036_valid_sudoku;
+
+#[path = "037_sudoku_solver.rs"]
+pub mod _037_sudoku_solver;

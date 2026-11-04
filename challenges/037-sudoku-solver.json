@@ -1,0 +1,15 @@
+{
+  "id": "037-sudoku-solver",
+  "title": "Sudoku Solver",
+  "leetcode_difficulty": "hard",
+  "challenge_date": "2026-11-04",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/sudoku-solver/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-04",
+  "rust_signature": "pub fn solve_sudoku(board: &mut Vec<Vec<char>>)",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/037-sudoku-solver.json"
+  }
+}
