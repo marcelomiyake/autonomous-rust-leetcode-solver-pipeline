@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.5.0...v1.6.0) (2026-11-04)
+
+
+### Features
+
+* add LeetCode 036-valid-sudoku solution ([0f09f98](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/0f09f9852562743db25a33c9bd9ffa77366779a2))
+* add LeetCode 037-sudoku-solver solution ([1a4e83e](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/1a4e83e4b5f84a77b7b9c2f6cdd601de1374101c))
+
 ## [1.5.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.4.0...v1.5.0) (2026-11-02)
 
 
