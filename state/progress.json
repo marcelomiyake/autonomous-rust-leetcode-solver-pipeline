@@ -179,7 +179,12 @@
       "id": "036-valid-sudoku",
       "published_at": "2026-11-03T04:24:35Z",
       "commit": "0f09f9852562743db25a33c9bd9ffa77366779a2"
+    },
+    {
+      "id": "037-sudoku-solver",
+      "published_at": "2026-11-04T04:23:48Z",
+      "commit": "1a4e83e4b5f84a77b7b9c2f6cdd601de1374101c"
     }
   ],
-  "updated_at": "2026-11-03T04:24:35Z"
+  "updated_at": "2026-11-04T04:23:48Z"
 }
