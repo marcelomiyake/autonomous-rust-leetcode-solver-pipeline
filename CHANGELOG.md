@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.6.0...v1.7.0) (2026-11-05)
+
+
+### Features
+
+* add LeetCode 038-count-and-say solution ([f9451f4](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/f9451f4df85f0a62401557b1bf7daa3f66fab7ce))
+
 ## [1.6.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.5.0...v1.6.0) (2026-11-04)
 
 
