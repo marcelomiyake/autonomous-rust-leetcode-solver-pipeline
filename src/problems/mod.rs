@@ -110,3 +110,6 @@ pub mod _036_valid_sudoku;
 
 #[path = "037_sudoku_solver.rs"]
 pub mod _037_sudoku_solver;
+
+#[path = "038_count_and_say.rs"]
+pub mod _038_count_and_say;

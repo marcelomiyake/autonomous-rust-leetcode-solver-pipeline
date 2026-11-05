@@ -1,0 +1,15 @@
+{
+  "id": "038-count-and-say",
+  "title": "Count and Say",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-05",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/count-and-say/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-05",
+  "rust_signature": "pub fn count_and_say(n: i32) -> String",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/038-count-and-say.json"
+  }
+}

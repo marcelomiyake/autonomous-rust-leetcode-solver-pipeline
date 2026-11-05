@@ -1,0 +1,11 @@
+{
+  "description": "The count-and-say sequence is a sequence of digit strings defined by the recursive formula:\n\n\tcountAndSay(1) = \"1\"\n\tcountAndSay(n) is the run-length encoding of countAndSay(n - 1).\n\nRun-length encoding (RLE) is a string compression method that works by replacing each maximal group of consecutive identical characters with the concatenation of the length of the group followed by the character itself. For example, to compress the string \"3322251\" we replace \"33\" with \"23\", replace \"222\" with \"32\", replace \"5\" with \"15\", and replace \"1\" with \"11\". Thus the compressed string becomes \"23321511\".\n\nGiven a positive integer n, return the nth element of the count-and-say sequence.",
+  "constraints": [
+    "1 <= n <= 30"
+  ],
+  "examples": [
+    {
+      "example": "countAndSay(1) = \"1\"\ncountAndSay(2) = RLE of \"1\" = \"11\"\ncountAndSay(3) = RLE of \"11\" = \"21\"\ncountAndSay(4) = RLE of \"21\" = \"1211\""
+    }
+  ]
+}
