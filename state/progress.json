@@ -189,7 +189,12 @@
       "id": "038-count-and-say",
       "published_at": "2026-11-05T04:21:21Z",
       "commit": "f9451f4df85f0a62401557b1bf7daa3f66fab7ce"
+    },
+    {
+      "id": "039-combination-sum",
+      "published_at": "2026-11-06T04:23:08Z",
+      "commit": "2d2a8dfbeb9323fba1bb0a97344ecef04ced3da6"
     }
   ],
-  "updated_at": "2026-11-05T04:21:21Z"
+  "updated_at": "2026-11-06T04:23:08Z"
 }
