@@ -113,3 +113,6 @@ pub mod _037_sudoku_solver;
 
 #[path = "038_count_and_say.rs"]
 pub mod _038_count_and_say;
+
+#[path = "039_combination_sum.rs"]
+pub mod _039_combination_sum;
