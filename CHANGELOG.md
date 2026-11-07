@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.8.0...v1.9.0) (2026-11-07)
+
+
+### Features
+
+* add LeetCode 040-combination-sum-ii solution ([439df5e](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/439df5ed1ed61ed29778e0866e8780e04f1064db))
+
 ## [1.8.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.7.0...v1.8.0) (2026-11-06)
 
 
