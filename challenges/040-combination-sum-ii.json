@@ -1,0 +1,15 @@
+{
+  "id": "040-combination-sum-ii",
+  "title": "Combination Sum II",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-07",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/combination-sum-ii/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-07",
+  "rust_signature": "pub fn combination_sum2(candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/040-combination-sum-ii.json"
+  }
+}

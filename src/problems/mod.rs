@@ -116,3 +116,6 @@ pub mod _038_count_and_say;
 
 #[path = "039_combination_sum.rs"]
 pub mod _039_combination_sum;
+
+#[path = "040_combination_sum_ii.rs"]
+pub mod _040_combination_sum_ii;
