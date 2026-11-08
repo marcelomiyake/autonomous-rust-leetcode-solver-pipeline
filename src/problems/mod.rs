@@ -119,3 +119,6 @@ pub mod _039_combination_sum;
 
 #[path = "040_combination_sum_ii.rs"]
 pub mod _040_combination_sum_ii;
+
+#[path = "041_first_missing_positive.rs"]
+pub mod _041_first_missing_positive;

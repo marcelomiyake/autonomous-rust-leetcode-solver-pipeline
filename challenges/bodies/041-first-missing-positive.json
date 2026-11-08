@@ -1,0 +1,21 @@
+{
+  "description": "Given an unsorted integer array nums. Return the smallest positive integer that is not present in nums.\n\nYou must implement an algorithm that runs in O(n) time and uses O(1) auxiliary space.",
+  "constraints": [
+    "1 <= nums.length <= 105",
+    "-231 <= nums[i] <= 231 - 1"
+  ],
+  "examples": [
+    {
+      "input": "nums = [1,2,0]",
+      "output": "3"
+    },
+    {
+      "input": "nums = [3,4,-1,1]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [7,8,9,11,12]",
+      "output": "1"
+    }
+  ]
+}

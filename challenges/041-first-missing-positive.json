@@ -1,0 +1,15 @@
+{
+  "id": "041-first-missing-positive",
+  "title": "First Missing Positive",
+  "leetcode_difficulty": "hard",
+  "challenge_date": "2026-11-08",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/first-missing-positive/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-08",
+  "rust_signature": "pub fn first_missing_positive(nums: Vec<i32>) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/041-first-missing-positive.json"
+  }
+}
