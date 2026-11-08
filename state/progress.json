@@ -199,7 +199,12 @@
       "id": "040-combination-sum-ii",
       "published_at": "2026-11-07T04:37:47Z",
       "commit": "439df5ed1ed61ed29778e0866e8780e04f1064db"
+    },
+    {
+      "id": "041-first-missing-positive",
+      "published_at": "2026-11-08T04:23:01Z",
+      "commit": "a977a768be8c6f48fb1615fd5eb26402543cde1d"
     }
   ],
-  "updated_at": "2026-11-07T04:37:47Z"
+  "updated_at": "2026-11-08T04:23:01Z"
 }
