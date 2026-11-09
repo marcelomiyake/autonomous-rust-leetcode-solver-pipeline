@@ -122,3 +122,6 @@ pub mod _040_combination_sum_ii;
 
 #[path = "041_first_missing_positive.rs"]
 pub mod _041_first_missing_positive;
+
+#[path = "042_trapping_rain_water.rs"]
+pub mod _042_trapping_rain_water;
