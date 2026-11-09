@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.9.0...v1.10.0) (2026-11-09)
+
+
+### Features
+
+* add LeetCode 042-trapping-rain-water solution ([952ce3b](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/952ce3b33538f2e0ffe2fff2f89805b2b905773e))
+
 ## [1.9.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.8.0...v1.9.0) (2026-11-08)
 
 
