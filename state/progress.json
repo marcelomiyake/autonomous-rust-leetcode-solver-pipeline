@@ -204,7 +204,12 @@
       "id": "041-first-missing-positive",
       "published_at": "2026-11-08T04:23:01Z",
       "commit": "a977a768be8c6f48fb1615fd5eb26402543cde1d"
+    },
+    {
+      "id": "042-trapping-rain-water",
+      "published_at": "2026-11-09T04:30:23Z",
+      "commit": "952ce3b33538f2e0ffe2fff2f89805b2b905773e"
     }
   ],
-  "updated_at": "2026-11-08T04:23:01Z"
+  "updated_at": "2026-11-09T04:30:23Z"
 }
