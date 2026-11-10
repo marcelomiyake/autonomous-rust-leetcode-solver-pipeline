@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.10.0...v1.11.0) (2026-11-10)
+
+
+### Features
+
+* add LeetCode 043-multiply-strings solution ([2322aeb](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/2322aeb6bd22151d1501bb53111d6776875668e4))
+
 ## [1.10.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.9.0...v1.10.0) (2026-11-09)
 
 
