@@ -125,3 +125,6 @@ pub mod _041_first_missing_positive;
 
 #[path = "042_trapping_rain_water.rs"]
 pub mod _042_trapping_rain_water;
+
+#[path = "043_multiply_strings.rs"]
+pub mod _043_multiply_strings;

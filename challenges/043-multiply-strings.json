@@ -1,0 +1,15 @@
+{
+  "id": "043-multiply-strings",
+  "title": "Multiply Strings",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-10",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/multiply-strings/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-10",
+  "rust_signature": "pub fn multiply(num1: String, num2: String) -> String",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/043-multiply-strings.json"
+  }
+}
