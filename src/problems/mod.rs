@@ -128,3 +128,6 @@ pub mod _042_trapping_rain_water;
 
 #[path = "043_multiply_strings.rs"]
 pub mod _043_multiply_strings;
+
+#[path = "044_wildcard_matching.rs"]
+pub mod _044_wildcard_matching;
