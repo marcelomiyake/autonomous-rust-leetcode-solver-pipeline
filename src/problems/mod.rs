@@ -131,3 +131,6 @@ pub mod _043_multiply_strings;
 
 #[path = "044_wildcard_matching.rs"]
 pub mod _044_wildcard_matching;
+
+#[path = "045_jump_game_ii.rs"]
+pub mod _045_jump_game_ii;

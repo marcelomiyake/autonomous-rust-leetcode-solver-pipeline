@@ -1,0 +1,18 @@
+{
+  "description": "You are given a 0-indexed array of integers nums of length n. You are initially positioned at\u00a0index 0.\n\nEach element nums[i] represents the maximum length of a forward jump from index i. In other words, if you are at index i, you can jump to any index (i + j)\u00a0where:\n\n\t0 <= j <= nums[i] and\n\ti + j < n\n\nReturn the minimum number of jumps to reach index n - 1. The test cases are generated such that you can reach index\u00a0n - 1.",
+  "constraints": [
+    "1 <= nums.length <= 104",
+    "0 <= nums[i] <= 1000",
+    "It's guaranteed that you can reach nums[n - 1]."
+  ],
+  "examples": [
+    {
+      "input": "nums = [2,3,1,1,4]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [2,3,0,1,4]",
+      "output": "2"
+    }
+  ]
+}

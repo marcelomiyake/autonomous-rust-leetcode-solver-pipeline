@@ -1,0 +1,15 @@
+{
+  "id": "045-jump-game-ii",
+  "title": "Jump Game II",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-12",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/jump-game-ii/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-12",
+  "rust_signature": "pub fn jump(nums: Vec<i32>) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/045-jump-game-ii.json"
+  }
+}
