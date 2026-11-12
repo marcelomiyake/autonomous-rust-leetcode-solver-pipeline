@@ -219,7 +219,12 @@
       "id": "044-wildcard-matching",
       "published_at": "2026-11-11T04:23:25Z",
       "commit": "d79dae6adccd873e4c259e5cadb58b73377633c9"
+    },
+    {
+      "id": "045-jump-game-ii",
+      "published_at": "2026-11-12T04:27:11Z",
+      "commit": "1d159b22498a56911a68bab093dba870480f5c43"
     }
   ],
-  "updated_at": "2026-11-11T04:23:25Z"
+  "updated_at": "2026-11-12T04:27:11Z"
 }
