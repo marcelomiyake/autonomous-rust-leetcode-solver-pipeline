@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.11.0...v1.12.0) (2026-11-12)
+
+
+### Features
+
+* add LeetCode 044-wildcard-matching solution ([d79dae6](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/d79dae6adccd873e4c259e5cadb58b73377633c9))
+* add LeetCode 045-jump-game-ii solution ([1d159b2](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/1d159b22498a56911a68bab093dba870480f5c43))
+
 ## [1.11.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.10.0...v1.11.0) (2026-11-10)
 
 
