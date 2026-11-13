@@ -224,7 +224,12 @@
       "id": "045-jump-game-ii",
       "published_at": "2026-11-12T04:27:11Z",
       "commit": "1d159b22498a56911a68bab093dba870480f5c43"
+    },
+    {
+      "id": "046-permutations",
+      "published_at": "2026-11-13T04:27:13Z",
+      "commit": "5db681778317b2376a2cee3e1ac18f47e9de3024"
     }
   ],
-  "updated_at": "2026-11-12T04:27:11Z"
+  "updated_at": "2026-11-13T04:27:13Z"
 }
