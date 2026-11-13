@@ -134,3 +134,6 @@ pub mod _044_wildcard_matching;
 
 #[path = "045_jump_game_ii.rs"]
 pub mod _045_jump_game_ii;
+
+#[path = "046_permutations.rs"]
+pub mod _046_permutations;
