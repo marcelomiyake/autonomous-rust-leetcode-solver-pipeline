@@ -1,0 +1,15 @@
+{
+  "id": "047-permutations-ii",
+  "title": "Permutations II",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-14",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/permutations-ii/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-14",
+  "rust_signature": "pub fn permute_unique(nums: Vec<i32>) -> Vec<Vec<i32>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/047-permutations-ii.json"
+  }
+}

@@ -137,3 +137,6 @@ pub mod _045_jump_game_ii;
 
 #[path = "046_permutations.rs"]
 pub mod _046_permutations;
+
+#[path = "047_permutations_ii.rs"]
+pub mod _047_permutations_ii;
