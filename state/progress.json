@@ -229,7 +229,12 @@
       "id": "046-permutations",
       "published_at": "2026-11-13T04:27:13Z",
       "commit": "5db681778317b2376a2cee3e1ac18f47e9de3024"
+    },
+    {
+      "id": "047-permutations-ii",
+      "published_at": "2026-11-14T04:29:05Z",
+      "commit": "e416586c451fea845f50381949b4ffa863ee3e80"
     }
   ],
-  "updated_at": "2026-11-13T04:27:13Z"
+  "updated_at": "2026-11-14T04:29:05Z"
 }
