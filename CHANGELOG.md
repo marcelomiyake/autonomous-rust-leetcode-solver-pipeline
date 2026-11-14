@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.13.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.12.0...v1.13.0) (2026-11-14)
+
+
+### Features
+
+* add LeetCode 046-permutations solution ([5db6817](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/5db681778317b2376a2cee3e1ac18f47e9de3024))
+* add LeetCode 047-permutations-ii solution ([e416586](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/e416586c451fea845f50381949b4ffa863ee3e80))
+
 ## [1.12.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.11.0...v1.12.0) (2026-11-12)
 
 
