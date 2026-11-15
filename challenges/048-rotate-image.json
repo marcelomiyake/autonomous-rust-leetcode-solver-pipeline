@@ -1,0 +1,15 @@
+{
+  "id": "048-rotate-image",
+  "title": "Rotate Image",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-15",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/rotate-image/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-15",
+  "rust_signature": "pub fn rotate(matrix: &mut Vec<Vec<i32>>)",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/048-rotate-image.json"
+  }
+}

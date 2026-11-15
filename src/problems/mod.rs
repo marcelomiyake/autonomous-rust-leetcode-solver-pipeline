@@ -140,3 +140,6 @@ pub mod _046_permutations;
 
 #[path = "047_permutations_ii.rs"]
 pub mod _047_permutations_ii;
+
+#[path = "048_rotate_image.rs"]
+pub mod _048_rotate_image;
