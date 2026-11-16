@@ -1,0 +1,15 @@
+{
+  "id": "049-group-anagrams",
+  "title": "Group Anagrams",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-16",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/group-anagrams/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-16",
+  "rust_signature": "pub fn group_anagrams(strs: Vec<String>) -> Vec<Vec<String>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/049-group-anagrams.json"
+  }
+}

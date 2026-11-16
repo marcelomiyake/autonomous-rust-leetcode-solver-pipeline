@@ -143,3 +143,6 @@ pub mod _047_permutations_ii;
 
 #[path = "048_rotate_image.rs"]
 pub mod _048_rotate_image;
+
+#[path = "049_group_anagrams.rs"]
+pub mod _049_group_anagrams;
