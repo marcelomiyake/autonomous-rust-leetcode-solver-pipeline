@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.14.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.13.0...v1.14.0) (2026-11-16)
+
+
+### Features
+
+* add LeetCode 048-rotate-image solution ([d9f5bb1](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/d9f5bb134009ea70f9ac7ad3428831b72f0071bf))
+* add LeetCode 049-group-anagrams solution ([de0106e](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/de0106e8113264153d07327e5cc25e95789b6cd2))
+
 ## [1.13.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.12.0...v1.13.0) (2026-11-14)
 
 
