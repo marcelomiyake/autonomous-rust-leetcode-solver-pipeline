@@ -146,3 +146,6 @@ pub mod _048_rotate_image;
 
 #[path = "049_group_anagrams.rs"]
 pub mod _049_group_anagrams;
+
+#[path = "050_powx_n.rs"]
+pub mod _050_powx_n;

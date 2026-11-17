@@ -1,0 +1,15 @@
+{
+  "id": "050-powx-n",
+  "title": "Pow(x, n)",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-17",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/powx-n/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-17",
+  "rust_signature": "pub fn my_pow(x: f64, n: i32) -> f64",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/050-powx-n.json"
+  }
+}
