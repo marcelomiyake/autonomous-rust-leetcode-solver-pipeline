@@ -244,7 +244,12 @@
       "id": "049-group-anagrams",
       "published_at": "2026-11-16T04:34:30Z",
       "commit": "de0106e8113264153d07327e5cc25e95789b6cd2"
+    },
+    {
+      "id": "050-powx-n",
+      "published_at": "2026-11-17T04:30:43Z",
+      "commit": "6c223e173892c42be3007b3df9ddda1345002e80"
     }
   ],
-  "updated_at": "2026-11-16T04:34:30Z"
+  "updated_at": "2026-11-17T04:30:43Z"
 }
