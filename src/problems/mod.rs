@@ -149,3 +149,6 @@ pub mod _049_group_anagrams;
 
 #[path = "050_powx_n.rs"]
 pub mod _050_powx_n;
+
+#[path = "051_n_queens.rs"]
+pub mod _051_n_queens;
