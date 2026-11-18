@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.15.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.14.0...v1.15.0) (2026-11-18)
+
+
+### Features
+
+* add LeetCode 050-powx-n solution ([6c223e1](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/6c223e173892c42be3007b3df9ddda1345002e80))
+* add LeetCode 051-n-queens solution ([01788a3](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/01788a39ea7771c58844652ca0a2a32c18e96e68))
+
 ## [1.14.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.13.0...v1.14.0) (2026-11-16)
 
 
