@@ -254,7 +254,12 @@
       "id": "051-n-queens",
       "published_at": "2026-11-18T04:28:46Z",
       "commit": "01788a39ea7771c58844652ca0a2a32c18e96e68"
+    },
+    {
+      "id": "052-n-queens-ii",
+      "published_at": "2026-11-20T04:26:18Z",
+      "commit": "37b824df3d1aa03d4eccba53f7f4e9aa8f81027a"
     }
   ],
-  "updated_at": "2026-11-18T04:28:46Z"
+  "updated_at": "2026-11-20T04:26:18Z"
 }
