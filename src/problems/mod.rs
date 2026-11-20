@@ -152,3 +152,6 @@ pub mod _050_powx_n;
 
 #[path = "051_n_queens.rs"]
 pub mod _051_n_queens;
+
+#[path = "052_n_queens_ii.rs"]
+pub mod _052_n_queens_ii;

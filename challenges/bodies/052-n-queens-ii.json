@@ -1,0 +1,16 @@
+{
+  "description": "The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other.\n\nGiven an integer n, return the number of distinct solutions to the\u00a0n-queens puzzle.",
+  "constraints": [
+    "1 <= n <= 9"
+  ],
+  "examples": [
+    {
+      "input": "n = 4",
+      "output": "2"
+    },
+    {
+      "input": "n = 1",
+      "output": "1"
+    }
+  ]
+}
