@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.16.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.15.0...v1.16.0) (2026-11-21)
+
+
+### Features
+
+* add LeetCode 052-n-queens-ii solution ([37b824d](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/37b824df3d1aa03d4eccba53f7f4e9aa8f81027a))
+* add LeetCode 053-maximum-subarray solution ([5b66da2](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/5b66da2600e99900f949d6792723dfd479bbd7e5))
+
 ## [1.15.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.14.0...v1.15.0) (2026-11-18)
 
 
