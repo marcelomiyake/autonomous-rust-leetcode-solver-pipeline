@@ -259,7 +259,12 @@
       "id": "052-n-queens-ii",
       "published_at": "2026-11-20T04:26:18Z",
       "commit": "37b824df3d1aa03d4eccba53f7f4e9aa8f81027a"
+    },
+    {
+      "id": "053-maximum-subarray",
+      "published_at": "2026-11-21T04:31:29Z",
+      "commit": "5b66da2600e99900f949d6792723dfd479bbd7e5"
     }
   ],
-  "updated_at": "2026-11-20T04:26:18Z"
+  "updated_at": "2026-11-21T04:31:29Z"
 }
