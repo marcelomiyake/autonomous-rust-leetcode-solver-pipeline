@@ -158,3 +158,6 @@ pub mod _052_n_queens_ii;
 
 #[path = "053_maximum_subarray.rs"]
 pub mod _053_maximum_subarray;
+
+#[path = "054_spiral_matrix.rs"]
+pub mod _054_spiral_matrix;

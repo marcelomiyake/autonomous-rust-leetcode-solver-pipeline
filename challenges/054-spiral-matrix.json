@@ -1,0 +1,15 @@
+{
+  "id": "054-spiral-matrix",
+  "title": "Spiral Matrix",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-22",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/spiral-matrix/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-22",
+  "rust_signature": "pub fn spiral_order(matrix: Vec<Vec<i32>>) -> Vec<i32>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/054-spiral-matrix.json"
+  }
+}
