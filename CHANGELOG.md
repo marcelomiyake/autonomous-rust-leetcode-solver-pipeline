@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.17.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.16.0...v1.17.0) (2026-11-23)
+
+
+### Features
+
+* add LeetCode 054-spiral-matrix solution ([4b85b69](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/4b85b69b0aab113c9c980852afb3d94753abfdd8))
+* add LeetCode 055-jump-game solution ([c199ddf](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/c199ddf1a5c95e07bb6aff0ccd7e9fbf774b085c))
+
 ## [1.16.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.15.0...v1.16.0) (2026-11-21)
 
 
