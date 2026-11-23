@@ -269,7 +269,12 @@
       "id": "054-spiral-matrix",
       "published_at": "2026-11-22T04:28:14Z",
       "commit": "4b85b69b0aab113c9c980852afb3d94753abfdd8"
+    },
+    {
+      "id": "055-jump-game",
+      "published_at": "2026-11-23T04:40:31Z",
+      "commit": "c199ddf1a5c95e07bb6aff0ccd7e9fbf774b085c"
     }
   ],
-  "updated_at": "2026-11-22T04:28:14Z"
+  "updated_at": "2026-11-23T04:40:31Z"
 }
