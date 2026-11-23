@@ -1,0 +1,15 @@
+{
+  "id": "055-jump-game",
+  "title": "Jump Game",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-23",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/jump-game/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-23",
+  "rust_signature": "pub fn can_jump(nums: Vec<i32>) -> bool",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/055-jump-game.json"
+  }
+}

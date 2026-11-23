@@ -161,3 +161,6 @@ pub mod _053_maximum_subarray;
 
 #[path = "054_spiral_matrix.rs"]
 pub mod _054_spiral_matrix;
+
+#[path = "055_jump_game.rs"]
+pub mod _055_jump_game;
