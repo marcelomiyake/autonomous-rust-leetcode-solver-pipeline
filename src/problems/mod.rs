@@ -164,3 +164,6 @@ pub mod _054_spiral_matrix;
 
 #[path = "055_jump_game.rs"]
 pub mod _055_jump_game;
+
+#[path = "056_merge_intervals.rs"]
+pub mod _056_merge_intervals;

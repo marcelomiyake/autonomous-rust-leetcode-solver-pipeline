@@ -1,0 +1,15 @@
+{
+  "id": "056-merge-intervals",
+  "title": "Merge Intervals",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-24",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/merge-intervals/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-24",
+  "rust_signature": "pub fn merge(intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/056-merge-intervals.json"
+  }
+}
