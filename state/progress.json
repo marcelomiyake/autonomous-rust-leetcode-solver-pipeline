@@ -274,7 +274,12 @@
       "id": "055-jump-game",
       "published_at": "2026-11-23T04:40:31Z",
       "commit": "c199ddf1a5c95e07bb6aff0ccd7e9fbf774b085c"
+    },
+    {
+      "id": "056-merge-intervals",
+      "published_at": "2026-11-24T04:21:42Z",
+      "commit": "9a2e22caf551489b7b929850c777e080858ebd2b"
     }
   ],
-  "updated_at": "2026-11-23T04:40:31Z"
+  "updated_at": "2026-11-24T04:21:42Z"
 }
