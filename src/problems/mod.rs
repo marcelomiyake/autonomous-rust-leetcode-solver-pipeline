@@ -167,3 +167,6 @@ pub mod _055_jump_game;
 
 #[path = "056_merge_intervals.rs"]
 pub mod _056_merge_intervals;
+
+#[path = "057_insert_interval.rs"]
+pub mod _057_insert_interval;

@@ -1,0 +1,15 @@
+{
+  "id": "057-insert-interval",
+  "title": "Insert Interval",
+  "leetcode_difficulty": "medium",
+  "challenge_date": "2026-11-25",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/insert-interval/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-25",
+  "rust_signature": "pub fn insert(intervals: Vec<Vec<i32>>, new_interval: Vec<i32>) -> Vec<Vec<i32>>",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/057-insert-interval.json"
+  }
+}
