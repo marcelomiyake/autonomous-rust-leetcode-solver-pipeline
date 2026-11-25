@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.18.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.17.0...v1.18.0) (2026-11-25)
+
+
+### Features
+
+* add LeetCode 056-merge-intervals solution ([9a2e22c](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/9a2e22caf551489b7b929850c777e080858ebd2b))
+* add LeetCode 057-insert-interval solution ([a3fba1f](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/a3fba1fd9830311f052912e6d173a21e2f91cae2))
+
 ## [1.17.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.16.0...v1.17.0) (2026-11-23)
 
 
