@@ -279,7 +279,12 @@
       "id": "056-merge-intervals",
       "published_at": "2026-11-24T04:21:42Z",
       "commit": "9a2e22caf551489b7b929850c777e080858ebd2b"
+    },
+    {
+      "id": "057-insert-interval",
+      "published_at": "2026-11-25T04:23:22Z",
+      "commit": "a3fba1fd9830311f052912e6d173a21e2f91cae2"
     }
   ],
-  "updated_at": "2026-11-24T04:21:42Z"
+  "updated_at": "2026-11-25T04:23:22Z"
 }
