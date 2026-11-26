@@ -170,3 +170,6 @@ pub mod _056_merge_intervals;
 
 #[path = "057_insert_interval.rs"]
 pub mod _057_insert_interval;
+
+#[path = "058_length_of_last_word.rs"]
+pub mod _058_length_of_last_word;

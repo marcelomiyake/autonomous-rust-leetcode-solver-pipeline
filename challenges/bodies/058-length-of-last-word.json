@@ -1,0 +1,22 @@
+{
+  "description": "Given a string s consisting of words and spaces, return the length of the last word in the string.\n\nA word is a maximal substring consisting of non-space characters only.",
+  "constraints": [
+    "1 <= s.length <= 104",
+    "s consists of only English letters and spaces ' '.",
+    "There will be at least one word in s."
+  ],
+  "examples": [
+    {
+      "input": "s = \"Hello World\"",
+      "output": "5"
+    },
+    {
+      "input": "s = \"   fly me   to   the moon  \"",
+      "output": "4"
+    },
+    {
+      "input": "s = \"luffy is still joyboy\"",
+      "output": "6"
+    }
+  ]
+}

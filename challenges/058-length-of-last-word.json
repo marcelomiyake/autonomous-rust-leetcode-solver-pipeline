@@ -1,0 +1,15 @@
+{
+  "id": "058-length-of-last-word",
+  "title": "Length of Last Word",
+  "leetcode_difficulty": "easy",
+  "challenge_date": "2026-11-26",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/length-of-last-word/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-26",
+  "rust_signature": "pub fn length_of_last_word(s: String) -> i32",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/058-length-of-last-word.json"
+  }
+}
