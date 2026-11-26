@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.18.0...v1.19.0) (2026-11-26)
+
+
+### Features
+
+* add LeetCode 058-length-of-last-word solution ([b936b0d](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/b936b0da68baebe96033f0fab658e23fe650a991))
+
 ## [1.18.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.17.0...v1.18.0) (2026-11-25)
 
 
