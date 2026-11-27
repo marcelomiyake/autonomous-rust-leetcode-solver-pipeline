@@ -289,7 +289,12 @@
       "id": "058-length-of-last-word",
       "published_at": "2026-11-26T04:23:33Z",
       "commit": "b936b0da68baebe96033f0fab658e23fe650a991"
+    },
+    {
+      "id": "059-spiral-matrix-ii",
+      "published_at": "2026-11-27T04:32:26Z",
+      "commit": "52ed0e66b38e076f259e121a2d55c31f1c2d70e2"
     }
   ],
-  "updated_at": "2026-11-26T04:23:33Z"
+  "updated_at": "2026-11-27T04:32:26Z"
 }
