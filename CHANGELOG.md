@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.20.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.19.0...v1.20.0) (2026-11-28)
+
+
+### Features
+
+* add LeetCode 059-spiral-matrix-ii solution ([52ed0e6](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/52ed0e66b38e076f259e121a2d55c31f1c2d70e2))
+* add LeetCode 060-permutation-sequence solution ([3770ccd](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/commit/3770ccd42cf68ba1cfaab997f7272c0688c237f5))
+
 ## [1.19.0](https://github.com/marcelomiyake/autonomous-rust-leetcode-solver-pipeline/compare/v1.18.0...v1.19.0) (2026-11-26)
 
 
