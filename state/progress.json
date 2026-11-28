@@ -294,7 +294,12 @@
       "id": "059-spiral-matrix-ii",
       "published_at": "2026-11-27T04:32:26Z",
       "commit": "52ed0e66b38e076f259e121a2d55c31f1c2d70e2"
+    },
+    {
+      "id": "060-permutation-sequence",
+      "published_at": "2026-11-28T04:23:11Z",
+      "commit": "3770ccd42cf68ba1cfaab997f7272c0688c237f5"
     }
   ],
-  "updated_at": "2026-11-27T04:32:26Z"
+  "updated_at": "2026-11-28T04:23:11Z"
 }
