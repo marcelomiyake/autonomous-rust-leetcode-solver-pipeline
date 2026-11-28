@@ -1,0 +1,15 @@
+{
+  "id": "060-permutation-sequence",
+  "title": "Permutation Sequence",
+  "leetcode_difficulty": "hard",
+  "challenge_date": "2026-11-28",
+  "source_type": "authorized-integration",
+  "source_url": "https://leetcode.com/problems/permutation-sequence/description/",
+  "rust_supported": true,
+  "rust_support_checked_at": "2026-11-28",
+  "rust_signature": "pub fn get_permutation(n: i32, k: i32) -> String",
+  "body_source": {
+    "type": "local-json",
+    "path": "challenges/bodies/060-permutation-sequence.json"
+  }
+}

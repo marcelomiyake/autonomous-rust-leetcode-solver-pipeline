@@ -176,3 +176,6 @@ pub mod _058_length_of_last_word;
 
 #[path = "059_spiral_matrix_ii.rs"]
 pub mod _059_spiral_matrix_ii;
+
+#[path = "060_permutation_sequence.rs"]
+pub mod _060_permutation_sequence;

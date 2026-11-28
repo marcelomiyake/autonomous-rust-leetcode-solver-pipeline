@@ -1,0 +1,21 @@
+{
+  "description": "The set [1, 2, 3, ...,\u00a0n] contains a total of n! unique permutations.\n\nBy listing and labeling all of the permutations in order, we get the following sequence for n = 3:\n\n\t\"123\"\n\t\"132\"\n\t\"213\"\n\t\"231\"\n\t\"312\"\n\t\"321\"\n\nGiven n and k, return the kth permutation sequence.",
+  "constraints": [
+    "1 <= n <= 9",
+    "1 <= k <= n!"
+  ],
+  "examples": [
+    {
+      "input": "n = 3, k = 3",
+      "output": "\"213\""
+    },
+    {
+      "input": "n = 4, k = 9",
+      "output": "\"2314\""
+    },
+    {
+      "input": "n = 3, k = 1",
+      "output": "\"123\""
+    }
+  ]
+}
